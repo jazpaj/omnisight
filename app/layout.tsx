@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   title: "OMNISIGHT | Decentralized AI Vision Agent Protocol",
   description:
     "Autonomous AI vision agents that analyze charts, NFTs, and images with verifiable on-chain receipts. Built on Solana.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/favicon-32.png",
+  },
   openGraph: {
     title: "OMNISIGHT | AI Vision Agent Protocol",
     description: "See Everything. Analyze Anything. Verifiable AI vision on Solana.",
