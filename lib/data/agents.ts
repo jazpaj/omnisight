@@ -1,0 +1,195 @@
+export type AgentSpecialty = "chart" | "nft" | "portrait" | "general" | "multimodal";
+export type AgentStatus = "active" | "processing" | "idle" | "calibrating";
+
+export interface AnalysisRecord {
+  id: string;
+  imageType: "chart" | "nft" | "portrait" | "screenshot" | "other";
+  summary: string;
+  confidence: number;
+  timestamp: Date;
+  processingTimeMs: number;
+}
+
+export interface VisionAgent {
+  id: string;
+  name: string;
+  codename: string;
+  avatar: string;
+  specialty: AgentSpecialty;
+  description: string;
+  color: string;
+  status: AgentStatus;
+  totalAnalyses: number;
+  avgConfidence: number;
+  avgResponseTimeMs: number;
+  uptime: number;
+  recentAnalyses: AnalysisRecord[];
+  capabilities: string[];
+}
+
+function generateRecentAnalyses(specialty: AgentSpecialty, count: number): AnalysisRecord[] {
+  const now = Date.now();
+  const chartSummaries = [
+    "Detected ascending triangle on SOL/USDT 4H",
+    "Head and shoulders pattern forming on ETH daily",
+    "Strong support identified at $142 for SOL",
+    "Bullish divergence on RSI for BTC/USDT",
+    "Double bottom confirmation on BONK/SOL",
+    "Rising wedge pattern on JUP 1H chart",
+  ];
+  const nftSummaries = [
+    "Rare trait combination: Gold Crown + Laser Eyes (0.3%)",
+    "Art style: Neo-futuristic digital painting, similar to BAYC",
+    "Collection floor analysis: 12.5 SOL, trending up 8%",
+    "Detected AI-generated art markers in collection",
+    "Rarity score 94/100 — top 2% in collection",
+  ];
+  const portraitSummaries = [
+    "Generated cyberpunk avatar from reference photo",
+    "Style transfer: watercolor portrait applied",
+    "Zero-shot identity preserved across 3 style variants",
+    "PFP generated in anime style from webcam capture",
+    "Portrait depth map extracted for 3D reconstruction",
+  ];
+  const generalSummaries = [
+    "OCR extracted 47 text elements from screenshot",
+    "Detected 12 objects in scene with 96% confidence",
+    "Sentiment analysis: positive tone in visual content",
+    "Image quality assessment: 8.2/10, good lighting",
+    "Classified as product photography with white background",
+  ];
+  const multimodalSummaries = [
+    "Cross-referenced chart pattern with on-chain volume data",
+    "Combined visual NFT analysis with marketplace pricing",
+    "Fused portrait features with social profile data",
+    "Merged chart image with sentiment from CT posts",
+    "Integrated visual product data with pricing API",
+  ];
+
+  const summaryMap: Record<AgentSpecialty, string[]> = {
+    chart: chartSummaries,
+    nft: nftSummaries,
+    portrait: portraitSummaries,
+    general: generalSummaries,
+    multimodal: multimodalSummaries,
+  };
+
+  const typeMap: Record<AgentSpecialty, AnalysisRecord["imageType"]> = {
+    chart: "chart",
+    nft: "nft",
+    portrait: "portrait",
+    general: "screenshot",
+    multimodal: "other",
+  };
+
+  const summaries = summaryMap[specialty];
+  // Use deterministic pseudo-random values to avoid SSR/client hydration mismatch
+  const seed = specialty.charCodeAt(0);
+  return Array.from({ length: count }, (_, i) => {
+    const s = ((seed + i) * 16807 + 13) % 2147483647;
+    const r1 = (s - 1) / 2147483646;
+    const s2 = (s * 16807 + 13) % 2147483647;
+    const r2 = (s2 - 1) / 2147483646;
+    const s3 = (s2 * 16807 + 13) % 2147483647;
+    const r3 = (s3 - 1) / 2147483646;
+    return {
+      id: `analysis-${specialty}-${i}`,
+      imageType: typeMap[specialty],
+      summary: summaries[i % summaries.length],
+      confidence: 85 + r1 * 13,
+      timestamp: new Date(1709847261000 - (i + 1) * 1000 * 60 * (5 + r2 * 30)),
+      processingTimeMs: 800 + r3 * 2200,
+    };
+  });
+}
+
+export const VISION_AGENTS: VisionAgent[] = [
+  {
+    id: "retina",
+    name: "RETINA",
+    codename: "RETINA",
+    avatar: "👁️",
+    specialty: "chart",
+    description: "Chart pattern specialist. Identifies support/resistance levels, trend lines, candlestick patterns, and technical indicators with surgical precision.",
+    color: "#00F0FF",
+    status: "active",
+    totalAnalyses: 14832,
+    avgConfidence: 96.2,
+    avgResponseTimeMs: 1240,
+    uptime: 99.7,
+    capabilities: ["Candlestick Patterns", "Support/Resistance", "Trend Lines", "RSI/MACD", "Volume Analysis", "Price Prediction"],
+    recentAnalyses: generateRecentAnalyses("chart", 5),
+  },
+  {
+    id: "spectrum",
+    name: "SPECTRUM",
+    codename: "SPECTRUM",
+    avatar: "🔮",
+    specialty: "nft",
+    description: "NFT and digital art analyst. Detects rarity traits, art style origins, collection patterns, and estimates value with cross-collection intelligence.",
+    color: "#A855F7",
+    status: "active",
+    totalAnalyses: 9456,
+    avgConfidence: 92.8,
+    avgResponseTimeMs: 1580,
+    uptime: 98.9,
+    capabilities: ["Rarity Scoring", "Style Detection", "Collection Analysis", "Value Estimation", "Trait Breakdown", "AI Art Detection"],
+    recentAnalyses: generateRecentAnalyses("nft", 5),
+  },
+  {
+    id: "genesis",
+    name: "GENESIS",
+    codename: "GENESIS",
+    avatar: "🧬",
+    specialty: "portrait",
+    description: "Portrait and avatar specialist. Zero-shot identity generation from reference images, style transfer, and PFP creation across multiple art styles.",
+    color: "#34D399",
+    status: "processing",
+    totalAnalyses: 7234,
+    avgConfidence: 89.5,
+    avgResponseTimeMs: 2100,
+    uptime: 97.4,
+    capabilities: ["Zero-Shot Portraits", "Style Transfer", "PFP Generation", "Depth Estimation", "Identity Preservation", "Multi-Style Output"],
+    recentAnalyses: generateRecentAnalyses("portrait", 5),
+  },
+  {
+    id: "cortex",
+    name: "CORTEX",
+    codename: "CORTEX",
+    avatar: "🧠",
+    specialty: "general",
+    description: "General vision agent. Handles any image type with broad understanding — OCR, object detection, scene analysis, and quality assessment.",
+    color: "#FACC15",
+    status: "active",
+    totalAnalyses: 21567,
+    avgConfidence: 94.1,
+    avgResponseTimeMs: 980,
+    uptime: 99.2,
+    capabilities: ["Object Detection", "OCR / Text Extraction", "Scene Analysis", "Quality Assessment", "Sentiment Analysis", "Classification"],
+    recentAnalyses: generateRecentAnalyses("general", 5),
+  },
+  {
+    id: "nexus",
+    name: "NEXUS",
+    codename: "NEXUS",
+    avatar: "🌐",
+    specialty: "multimodal",
+    description: "Multi-modal fusion agent. Combines visual analysis with text, on-chain data, and market signals for comprehensive intelligence reports.",
+    color: "#F97316",
+    status: "idle",
+    totalAnalyses: 5678,
+    avgConfidence: 91.3,
+    avgResponseTimeMs: 2800,
+    uptime: 96.8,
+    capabilities: ["Multi-Modal Fusion", "On-Chain Correlation", "Market Signal Integration", "Cross-Data Analysis", "Intelligence Reports", "Trend Synthesis"],
+    recentAnalyses: generateRecentAnalyses("multimodal", 5),
+  },
+];
+
+export function getAgentById(id: string): VisionAgent | undefined {
+  return VISION_AGENTS.find((a) => a.id === id);
+}
+
+export function getAgentBySpecialty(specialty: AgentSpecialty): VisionAgent {
+  return VISION_AGENTS.find((a) => a.specialty === specialty) ?? VISION_AGENTS[3];
+}
