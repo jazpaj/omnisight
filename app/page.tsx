@@ -11,26 +11,18 @@ import TokenSection from "@/components/landing/TokenSection";
 import FAQ from "@/components/landing/FAQ";
 import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
-import ParticleField from "@/components/landing/ParticleField";
-import SectionDivider from "@/components/landing/SectionDivider";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black relative noise-overlay">
-      <ParticleField />
+    <main className="min-h-screen bg-[#09090b] relative">
       <Navbar />
       <Hero />
       <LiveStats />
       <Capabilities />
-      <SectionDivider />
       <HowItWorks />
-      <SectionDivider />
       <AgentShowcase />
-      <SectionDivider />
       <VisionDemo />
-      <SectionDivider />
       <APIPreview />
-      <SectionDivider />
       <FounderSection />
       <TokenSection />
       <FAQ />

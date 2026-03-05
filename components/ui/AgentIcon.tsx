@@ -51,8 +51,8 @@ function SpectrumIcon({ size, color, id }: { size: number; color: string; id: st
       {/* Light rays */}
       <line x1="6" y1="22" x2="18" y2="22" stroke={color} strokeWidth="1.5" strokeOpacity="0.7" />
       <line x1="32" y1="16" x2="44" y2="12" stroke="#FF6B6B" strokeWidth="1" strokeOpacity="0.6" />
-      <line x1="32" y1="20" x2="44" y2="20" stroke="#FACC15" strokeWidth="1" strokeOpacity="0.6" />
-      <line x1="32" y1="24" x2="44" y2="28" stroke="#34d399" strokeWidth="1" strokeOpacity="0.6" />
+      <line x1="32" y1="20" x2="44" y2="20" stroke="#fde68a" strokeWidth="1" strokeOpacity="0.6" />
+      <line x1="32" y1="24" x2="44" y2="28" stroke="#6ee7b7" strokeWidth="1" strokeOpacity="0.6" />
       <line x1="32" y1="28" x2="44" y2="36" stroke={color} strokeWidth="1" strokeOpacity="0.6" />
     </svg>
   );

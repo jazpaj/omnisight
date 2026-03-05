@@ -1,7 +1,6 @@
 "use client";
 
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 const requestJson = {
@@ -60,7 +59,7 @@ function syntaxHighlight(json: string): React.ReactNode[] {
         );
       } else if (token.startsWith("KEY:")) {
         parts.push(
-          <span key={partIdx++} style={{ color: "#00F0FF" }}>
+          <span key={partIdx++} style={{ color: "var(--accent)" }}>
             {token.slice(4)}
           </span>
         );
@@ -72,13 +71,13 @@ function syntaxHighlight(json: string): React.ReactNode[] {
         );
       } else if (token.startsWith("BOOL:")) {
         parts.push(
-          <span key={partIdx++} style={{ color: "#34d399" }}>
+          <span key={partIdx++} style={{ color: "var(--success)" }}>
             {token.slice(5)}
           </span>
         );
       } else if (token.startsWith("NUM:")) {
         parts.push(
-          <span key={partIdx++} style={{ color: "#FACC15" }}>
+          <span key={partIdx++} style={{ color: "var(--warning)" }}>
             {token.slice(4)}
           </span>
         );
@@ -137,7 +136,7 @@ function FeatureStrip() {
           <div className="glass-card p-4 flex items-center gap-3">
             <div
               className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-              style={{ background: "rgba(0,240,255,0.08)", color: "#00F0FF" }}
+              style={{ background: "var(--accent-subtle)", color: "var(--accent)" }}
             >
               {f.icon}
             </div>
@@ -150,9 +149,6 @@ function FeatureStrip() {
 }
 
 export default function APIPreview() {
-  const connectorRef = useRef(null);
-  const isConnectorInView = useInView(connectorRef, { once: true });
-
   const requestStr = JSON.stringify(requestJson, null, 2);
   const responseStr = JSON.stringify(responseJson, null, 2);
 
@@ -183,7 +179,7 @@ export default function APIPreview() {
                 <div className="flex items-center gap-3">
                   <span
                     className="text-[10px] font-semibold font-mono px-2.5 py-1 rounded"
-                    style={{ background: "rgba(0,240,255,0.1)", color: "#00F0FF" }}
+                    style={{ background: "var(--accent-subtle)", color: "var(--accent)" }}
                   >
                     REQUEST
                   </span>
@@ -200,34 +196,16 @@ export default function APIPreview() {
             </div>
           </ScrollReveal>
 
-          {/* Connector arrow */}
-          <div ref={connectorRef} className="hidden lg:flex items-center justify-center px-2">
-            <motion.div
-              className="flex flex-col items-center gap-1"
-              initial={{ opacity: 0 }}
-              animate={isConnectorInView ? { opacity: 1 } : undefined}
-              transition={{ delay: 0.6, duration: 0.5 }}
+          {/* Static arrow connector */}
+          <div className="hidden lg:flex items-center justify-center px-2">
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}
             >
-              <motion.div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{
-                  background: "rgba(0,240,255,0.06)",
-                  border: "1px solid rgba(0,240,255,0.15)",
-                }}
-                animate={isConnectorInView ? {
-                  boxShadow: [
-                    "0 0 10px rgba(0,240,255,0.1)",
-                    "0 0 25px rgba(0,240,255,0.3)",
-                    "0 0 10px rgba(0,240,255,0.1)",
-                  ],
-                } : undefined}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <svg className="w-5 h-5 text-[#00F0FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </motion.div>
-            </motion.div>
+              <svg className="w-5 h-5" style={{ color: "var(--accent)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
           </div>
 
           {/* Response */}
@@ -240,7 +218,7 @@ export default function APIPreview() {
                 <div className="flex items-center gap-3">
                   <span
                     className="text-[10px] font-semibold font-mono px-2.5 py-1 rounded"
-                    style={{ background: "rgba(52,211,153,0.1)", color: "#34d399" }}
+                    style={{ background: "rgba(110,231,183,0.08)", color: "var(--success)" }}
                   >
                     RESPONSE
                   </span>

@@ -22,7 +22,7 @@ const tabData: Record<
 > = {
   chart: {
     agent: "RETINA",
-    agentColor: "#00F0FF",
+    agentColor: "#5eead4",
     results: [
       { label: "Pattern", value: "Ascending Triangle", highlight: true },
       { label: "Trend", value: "Bullish", highlight: true },
@@ -36,7 +36,7 @@ const tabData: Record<
   },
   nft: {
     agent: "SPECTRUM",
-    agentColor: "#A855F7",
+    agentColor: "#a78bfa",
     results: [
       { label: "Collection", value: "DeGods", highlight: true },
       { label: "Rarity Rank", value: "#47 / 10,000", highlight: true },
@@ -50,7 +50,7 @@ const tabData: Record<
   },
   portrait: {
     agent: "GENESIS",
-    agentColor: "#34D399",
+    agentColor: "#6ee7b7",
     results: [
       { label: "Face Detected", value: "Yes", highlight: true },
       { label: "Identity Lock", value: "97.2%", highlight: true },
@@ -81,12 +81,12 @@ function ChartMockImage() {
     >
       <defs>
         <linearGradient id="chartGrad" x1="0" y1="240" x2="0" y2="80">
-          <stop offset="0%" stopColor="#00F0FF" stopOpacity="0" />
-          <stop offset="100%" stopColor="#00F0FF" stopOpacity="0.15" />
+          <stop offset="0%" stopColor="#5eead4" stopOpacity="0" />
+          <stop offset="100%" stopColor="#5eead4" stopOpacity="0.15" />
         </linearGradient>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="400" y2="0">
-          <stop offset="0%" stopColor="#00F0FF" />
-          <stop offset="100%" stopColor="#34d399" />
+          <stop offset="0%" stopColor="#5eead4" />
+          <stop offset="100%" stopColor="#6ee7b7" />
         </linearGradient>
       </defs>
       {/* Grid lines */}
@@ -114,8 +114,8 @@ function ChartMockImage() {
         const bottom = Math.max(c.o, c.c);
         return (
           <g key={i}>
-            <line x1={c.x} y1={c.h} x2={c.x} y2={c.l} stroke={bullish ? "#34d399" : "#f87171"} strokeWidth="1" opacity="0.6" />
-            <rect x={c.x - 8} y={top} width={16} height={Math.max(bottom - top, 2)} fill={bullish ? "#34d399" : "#f87171"} opacity="0.7" rx="1" />
+            <line x1={c.x} y1={c.h} x2={c.x} y2={c.l} stroke={bullish ? "#6ee7b7" : "#f87171"} strokeWidth="1" opacity="0.6" />
+            <rect x={c.x - 8} y={top} width={16} height={Math.max(bottom - top, 2)} fill={bullish ? "#6ee7b7" : "#f87171"} opacity="0.7" rx="1" />
           </g>
         );
       })}
@@ -154,7 +154,7 @@ function NFTMockImage() {
             <div
               className="w-16 h-16 md:w-20 md:h-20 rotate-45 rounded-lg"
               style={{
-                background: "linear-gradient(135deg, #A855F7, #00F0FF)",
+                background: "linear-gradient(135deg, #a78bfa, #5eead4)",
                 opacity: 0.3,
               }}
             />
@@ -191,7 +191,7 @@ function PortraitMockImage() {
           style={{
             width: `${size * 2}px`,
             height: `${size * 2}px`,
-            border: `1px solid rgba(52,211,153,${0.08 + i * 0.06})`,
+            border: `1px solid rgba(110,231,183,${0.08 + i * 0.06})`,
           }}
         />
       ))}
@@ -199,8 +199,8 @@ function PortraitMockImage() {
       <div
         className="w-20 h-20 md:w-24 md:h-24 rounded-full relative"
         style={{
-          background: "radial-gradient(ellipse at 45% 40%, rgba(52,211,153,0.25), rgba(0,240,255,0.1) 60%, transparent 80%)",
-          border: "1.5px solid rgba(52,211,153,0.25)",
+          background: "radial-gradient(ellipse at 45% 40%, rgba(110,231,183,0.25), rgba(0,240,255,0.1) 60%, transparent 80%)",
+          border: "1.5px solid rgba(110,231,183,0.25)",
         }}
       >
         {/* Face features suggestion */}
@@ -227,9 +227,9 @@ function PortraitMockImage() {
           className="absolute w-1.5 h-1.5 rounded-full"
           style={{
             ...pos,
-            background: "#34D399",
+            background: "#6ee7b7",
             opacity: 0.4,
-            boxShadow: "0 0 6px rgba(52,211,153,0.4)",
+            boxShadow: "0 0 6px rgba(110,231,183,0.4)",
           }}
         />
       ))}
@@ -353,7 +353,7 @@ export default function VisionDemo() {
                 <motion.div
                   className="h-full rounded-full"
                   style={{
-                    background: `linear-gradient(90deg, ${current.agentColor}, #A855F7)`,
+                    background: `linear-gradient(90deg, ${current.agentColor}, #a78bfa)`,
                   }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
@@ -361,7 +361,7 @@ export default function VisionDemo() {
               </div>
               <span
                 className="text-[10px] font-mono shrink-0"
-                style={{ color: isComplete ? "#34d399" : "rgba(255,255,255,0.3)" }}
+                style={{ color: isComplete ? "#6ee7b7" : "rgba(255,255,255,0.3)" }}
               >
                 {isComplete ? "DONE" : `${Math.round(progressPercent)}%`}
               </span>
@@ -399,8 +399,6 @@ export default function VisionDemo() {
                   }}
                 >
                   <MockImage />
-                  <CornerBrackets color={current.agentColor} />
-                  <div className="scan-line" />
                 </div>
               </div>
 
@@ -413,7 +411,7 @@ export default function VisionDemo() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="text-[10px] font-mono px-2 py-0.5 rounded"
-                      style={{ background: "rgba(52,211,153,0.1)", color: "#34d399" }}
+                      style={{ background: "rgba(110,231,183,0.1)", color: "#6ee7b7" }}
                     >
                       COMPLETE
                     </motion.span>
@@ -433,7 +431,7 @@ export default function VisionDemo() {
                     >
                       <span className="text-xs text-white/40">{r.label}</span>
                       <span
-                        className={`text-xs font-semibold font-mono ${r.highlight ? "text-[#34d399]" : "text-white/60"}`}
+                        className={`text-xs font-semibold font-mono ${r.highlight ? "text-[#6ee7b7]" : "text-white/60"}`}
                       >
                         {r.value}
                       </span>
@@ -446,21 +444,21 @@ export default function VisionDemo() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={showResults ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
                   transition={{ delay: showResults ? current.results.length * 0.2 + 0.1 : 0, duration: 0.4 }}
-                  className="shimmer-border rounded-xl p-[1px]"
+                  className="rounded-xl"
                 >
-                  <div className="rounded-xl p-3" style={{ background: "rgba(0,240,255,0.04)" }}>
+                  <div className="rounded-xl p-3" style={{ background: "var(--accent-subtle)", border: "1px solid var(--border)" }}>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[9px] font-mono font-semibold text-[#00F0FF]/60 uppercase tracking-wider">
+                      <span className="text-[9px] font-mono font-medium uppercase tracking-wider" style={{ color: "var(--accent)", opacity: 0.7 }}>
                         On-Chain Receipt
                       </span>
-                      <svg className="w-3.5 h-3.5 text-[#34d399]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-3.5 h-3.5" style={{ color: "var(--success)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <div className="text-[10px] text-white/30 font-mono">
+                    <div className="text-[10px] font-mono" style={{ color: "var(--text-tertiary)" }}>
                       hash: {current.receipt.hash}
                     </div>
-                    <div className="text-[10px] text-white/20 font-mono mt-0.5">
+                    <div className="text-[10px] font-mono mt-0.5" style={{ color: "var(--text-quaternary)" }}>
                       slot: {current.receipt.slot}
                     </div>
                   </div>

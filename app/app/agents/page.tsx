@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSimulator } from "@/lib/data/simulator";
 import NeonBadge from "@/components/ui/NeonBadge";
 import PulsingDot from "@/components/ui/PulsingDot";
-import ProgressRing from "@/components/ui/ProgressRing";
 
 const statusColorMap: Record<string, "cyan" | "green" | "red" | "orange" | "yellow"> = {
   active: "green",
@@ -33,7 +32,7 @@ export default function AgentsPage() {
             transition={{ delay: i * 0.1 }}
           >
             <Link href={`/app/agent/${agent.id}`} className="block">
-              <div className="card card-glow p-5 hover:bg-white/[0.06] transition-all cursor-pointer">
+              <div className="card p-5 hover:bg-white/[0.06] transition-all cursor-pointer">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl">{agent.avatar}</span>
@@ -44,7 +43,7 @@ export default function AgentsPage() {
                     </div>
                     <div className="text-xs text-white/40 capitalize">{agent.specialty} specialist</div>
                   </div>
-                  <ProgressRing value={agent.avgConfidence} size={44} color={agent.color} />
+                  <span className="text-sm font-mono font-medium" style={{ color: agent.color }}>{agent.avgConfidence.toFixed(1)}%</span>
                 </div>
 
                 {/* Description */}

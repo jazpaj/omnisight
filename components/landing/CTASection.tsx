@@ -4,8 +4,6 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { TOKEN } from "@/lib/constants";
-import OmnisightLogo from "@/components/ui/OmnisightLogo";
-import MagneticButton from "@/components/ui/MagneticButton";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function CTASection() {
@@ -15,28 +13,14 @@ export default function CTASection() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{
-        padding: "140px 24px",
-        background: "linear-gradient(to bottom, #000000, #0a0a1a)",
-      }}
+      style={{ padding: "120px 24px" }}
     >
-      {/* Background Logo */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="iris-pulse" style={{ opacity: 0.08 }}>
-          <OmnisightLogo size={200} />
-        </div>
-      </div>
-
       {/* Content */}
       <div ref={ref} className="relative z-10 max-w-3xl mx-auto text-center">
         <motion.div
-          initial={{ scale: 0.92, opacity: 0, filter: "blur(8px)" }}
-          animate={
-            isInView
-              ? { scale: 1, opacity: 1, filter: "blur(0px)" }
-              : undefined
-          }
-          transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.5 }}
         >
           {/* Tag */}
           <ScrollReveal>
@@ -44,59 +28,55 @@ export default function CTASection() {
           </ScrollReveal>
 
           {/* Headline */}
-          <h2 className="text-display-xl mb-6">
+          <h2 className="text-display mb-6">
             The Future of
             <br />
-            <span className="gradient-text-animated">AI Vision</span>
+            <span className="gradient-text">AI Vision</span>
           </h2>
 
           {/* Subtitle */}
-          <p className="text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed text-white/40">
+          <p className="text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
             Join the protocol that brings autonomous AI vision to crypto &mdash;
             with verifiable on-chain proofs for every analysis.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <MagneticButton>
-              <Link
-                href="/app"
-                className="btn-gradient btn-shimmer inline-flex items-center justify-center gap-2 py-4 px-10 text-sm font-semibold"
+            <Link
+              href="/app"
+              className="btn-primary inline-flex items-center justify-center gap-2 py-4 px-10 text-sm font-medium"
+            >
+              Launch App
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                Launch App
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </Link>
-            </MagneticButton>
-            <MagneticButton>
-              <a
-                href={TOKEN.pumpFunUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-outline inline-flex items-center justify-center py-4 px-10 text-sm font-semibold"
-              >
-                Buy {TOKEN.symbol}
-              </a>
-            </MagneticButton>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </Link>
+            <a
+              href={TOKEN.pumpFunUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary inline-flex items-center justify-center py-4 px-10 text-sm font-medium"
+            >
+              Buy {TOKEN.symbol}
+            </a>
           </div>
 
           {/* Trust bar */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
-            {/* Shield - Verified on Solana */}
             <div className="flex items-center gap-2.5">
               <svg
-                className="w-4 h-4 text-[#34d399]"
+                className="w-4 h-4"
+                style={{ color: "var(--success)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -108,13 +88,13 @@ export default function CTASection() {
                   d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
                 />
               </svg>
-              <span className="text-xs text-white/40">Verified on Solana</span>
+              <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>Verified on Solana</span>
             </div>
 
-            {/* Lightning - < 2s Analysis */}
             <div className="flex items-center gap-2.5">
               <svg
-                className="w-4 h-4 text-[#FACC15]"
+                className="w-4 h-4"
+                style={{ color: "var(--warning)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -126,13 +106,13 @@ export default function CTASection() {
                   d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
                 />
               </svg>
-              <span className="text-xs text-white/40">&lt; 2s Analysis</span>
+              <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>&lt; 2s Analysis</span>
             </div>
 
-            {/* Eye - 5 AI Agents */}
             <div className="flex items-center gap-2.5">
               <svg
-                className="w-4 h-4 text-[#00F0FF]"
+                className="w-4 h-4"
+                style={{ color: "var(--accent)" }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -149,7 +129,7 @@ export default function CTASection() {
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <span className="text-xs text-white/40">5 AI Agents</span>
+              <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>5 AI Agents</span>
             </div>
           </div>
         </motion.div>

@@ -14,7 +14,7 @@ export default function ImagePreview({ src, alt, className = "" }: ImagePreviewP
   return (
     <>
       <div
-        className={`relative cursor-pointer rounded-xl overflow-hidden border border-white/[0.08] hover:border-neon-cyan/30 transition-all ${className}`}
+        className={`relative cursor-pointer rounded-xl overflow-hidden border border-white/[0.08] hover:border-white/20 transition-all ${className}`}
         onClick={() => setExpanded(true)}
       >
         <img src={src} alt={alt} className="w-full h-full object-cover" />

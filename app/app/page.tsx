@@ -18,14 +18,14 @@ export default function AppDashboard() {
   const { agents, latestAnalysis, totalAnalyses, avgConfidence, receiptsGenerated } = useSimulator();
 
   const stats = [
-    { label: "Total Analyses", value: totalAnalyses, decimals: 0, color: "#00F0FF" },
-    { label: "Active Agents", value: agents.filter(a => a.status === "active" || a.status === "processing").length, decimals: 0, color: "#34D399" },
-    { label: "Avg Confidence", value: avgConfidence, decimals: 1, suffix: "%", color: "#A855F7" },
-    { label: "Receipts Generated", value: receiptsGenerated, decimals: 0, color: "#F97316" },
+    { label: "Total Analyses", value: totalAnalyses, decimals: 0, color: "var(--accent)" },
+    { label: "Active Agents", value: agents.filter(a => a.status === "active" || a.status === "processing").length, decimals: 0, color: "var(--green)" },
+    { label: "Avg Confidence", value: avgConfidence, decimals: 1, suffix: "%", color: "var(--purple)" },
+    { label: "Receipts Generated", value: receiptsGenerated, decimals: 0, color: "var(--orange)" },
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white mb-1">Dashboard</h1>
@@ -61,7 +61,7 @@ export default function AppDashboard() {
               key={agent.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="card card-glow p-4"
+              className="card p-4"
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-xl">{agent.avatar}</span>
@@ -108,7 +108,7 @@ export default function AppDashboard() {
                 <span className="text-sm">{record.agentAvatar}</span>
                 <span className="text-xs font-semibold" style={{ color: record.agentColor }}>{record.agentName}</span>
                 <span className="flex-1 text-xs text-white/50 truncate">{record.summary}</span>
-                <span className="text-[10px] font-mono text-neon-green">{record.confidence.toFixed(1)}%</span>
+                <span className="text-[10px] font-mono" style={{ color: "var(--green)" }}>{record.confidence.toFixed(1)}%</span>
                 <span className="text-[10px] font-mono text-white/25">{formatTimeAgo(record.timestamp)}</span>
               </div>
             ))}

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useSimulator } from "@/lib/data/simulator";
 import NeonBadge from "@/components/ui/NeonBadge";
 import PulsingDot from "@/components/ui/PulsingDot";
-import ProgressRing from "@/components/ui/ProgressRing";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import { formatTimeAgo } from "@/lib/utils";
 import Link from "next/link";
@@ -26,13 +25,13 @@ export default function AgentDetailPage({ params }: { params: Promise<{ id: stri
     return (
       <div className="p-6">
         <h1 className="text-xl text-white/50">Agent not found</h1>
-        <Link href="/app/agents" className="text-sm text-neon-cyan mt-2 inline-block">← Back to Agents</Link>
+        <Link href="/app/agents" className="text-sm mt-2 inline-block" style={{ color: "var(--accent)" }}>← Back to Agents</Link>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       <Link href="/app/agents" className="text-xs text-white/30 hover:text-white/50 transition-colors">← Back to Agents</Link>
 
       {/* Header */}
@@ -81,7 +80,7 @@ export default function AgentDetailPage({ params }: { params: Promise<{ id: stri
         <div className="card overflow-hidden">
           {agent.recentAnalyses.map((record, i) => (
             <div key={record.id} className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: i < agent.recentAnalyses.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}>
-              <ProgressRing value={record.confidence} size={32} color={agent.color} strokeWidth={2} />
+              <span className="text-xs font-mono font-medium shrink-0" style={{ color: agent.color }}>{record.confidence.toFixed(1)}%</span>
               <span className="flex-1 text-xs text-white/60">{record.summary}</span>
               <span className="text-[10px] font-mono text-white/30">{record.processingTimeMs.toFixed(0)}ms</span>
               <span className="text-[10px] font-mono text-white/20">{formatTimeAgo(record.timestamp)}</span>

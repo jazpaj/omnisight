@@ -18,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-black">
+    <div className="flex min-h-screen bg-[#09090b]">
       {/* Sidebar */}
       <aside
         className="shrink-0 flex flex-col transition-all duration-300"
@@ -44,9 +44,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200"
                 style={{
-                  background: isActive ? "rgba(0,240,255,0.08)" : "transparent",
-                  color: isActive ? "#00F0FF" : "rgba(255,255,255,0.5)",
-                  borderLeft: isActive ? "2px solid #00F0FF" : "2px solid transparent",
+                  background: isActive ? "var(--surface-2)" : "transparent",
+                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                  borderLeft: isActive ? "2px solid var(--accent)" : "2px solid transparent",
                 }}
               >
                 <span className="text-base">{item.icon}</span>

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import OmnisightLogo from "@/components/ui/OmnisightLogo";
-import MagneticButton from "@/components/ui/MagneticButton";
 import PulsingDot from "@/components/ui/PulsingDot";
 
 const navLinks = [
@@ -70,9 +69,9 @@ export default function Navbar() {
                   transition={{ duration: 0.3 }}
                   className="hidden md:inline-flex items-center gap-1.5 ml-2 px-2.5 py-1 rounded-full text-[10px] font-medium"
                   style={{
-                    background: "rgba(52,211,153,0.1)",
-                    border: "1px solid rgba(52,211,153,0.25)",
-                    color: "#34d399",
+                    background: "rgba(110,231,183,0.1)",
+                    border: "1px solid rgba(110,231,183,0.25)",
+                    color: "#6ee7b7",
                     fontFamily: "var(--font-fragment-mono)",
                   }}
                 >
@@ -117,10 +116,9 @@ export default function Navbar() {
 
           {/* CTA button */}
           <div className="hidden md:block">
-            <MagneticButton>
               <Link
                 href="/app"
-                className="btn-gradient btn-shimmer inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold"
+                className="btn-primary inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium"
               >
                 Launch App
                 <svg
@@ -137,7 +135,6 @@ export default function Navbar() {
                   />
                 </svg>
               </Link>
-            </MagneticButton>
           </div>
 
           {/* Mobile hamburger */}
@@ -209,7 +206,7 @@ export default function Navbar() {
                 <Link
                   href="/app"
                   onClick={() => setMobileOpen(false)}
-                  className="btn-gradient btn-shimmer inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold"
+                  className="btn-primary inline-flex items-center justify-center px-8 py-3.5 text-base font-medium"
                 >
                   Launch App
                 </Link>

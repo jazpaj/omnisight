@@ -80,12 +80,12 @@ export default function APIPlaygroundPage() {
             onClick={() => setActiveEndpoint(i)}
             className="px-4 py-2 rounded-lg text-xs font-mono transition-all cursor-pointer"
             style={{
-              background: i === activeEndpoint ? "rgba(0,240,255,0.1)" : "rgba(255,255,255,0.03)",
-              border: `1px solid ${i === activeEndpoint ? "rgba(0,240,255,0.3)" : "rgba(255,255,255,0.06)"}`,
-              color: i === activeEndpoint ? "#00F0FF" : "rgba(255,255,255,0.5)",
+              background: i === activeEndpoint ? "var(--surface-2)" : "var(--surface-1)",
+              border: `1px solid ${i === activeEndpoint ? "var(--border-hover)" : "var(--border)"}`,
+              color: i === activeEndpoint ? "var(--text-primary)" : "var(--text-secondary)",
             }}
           >
-            <span className="text-neon-green mr-1">{e.method}</span> {e.path}
+            <span className="mr-1" style={{ color: "var(--green)" }}>{e.method}</span> {e.path}
           </button>
         ))}
       </div>
@@ -94,7 +94,7 @@ export default function APIPlaygroundPage() {
       <motion.div key={activeEndpoint} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono font-bold text-neon-green">{ep.method}</span>
+            <span className="text-xs font-mono font-bold" style={{ color: "var(--green)" }}>{ep.method}</span>
             <span className="text-sm font-mono text-white/70">{ep.path}</span>
           </div>
           <p className="text-sm text-white/50">{ep.description}</p>

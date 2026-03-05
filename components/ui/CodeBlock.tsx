@@ -23,7 +23,7 @@ export default function CodeBlock({ code, language = "json", className = "" }: C
         <span className="text-xs font-mono text-white/40">{language}</span>
         <button
           onClick={handleCopy}
-          className="text-xs font-mono text-white/40 hover:text-neon-cyan transition-colors cursor-pointer"
+          className="text-xs font-mono text-white/40 hover:text-white transition-colors cursor-pointer"
         >
           {copied ? "Copied!" : "Copy"}
         </button>

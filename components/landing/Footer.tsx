@@ -35,14 +35,10 @@ export default function Footer() {
   return (
     <footer className="px-6 pt-0 pb-8">
       <div className="max-w-6xl mx-auto">
-        {/* Top gradient divider - 2px */}
+        {/* Top divider */}
         <div
           className="mb-10"
-          style={{
-            height: "2px",
-            background:
-              "linear-gradient(90deg, transparent, rgba(0,240,255,0.2) 20%, rgba(168,85,247,0.2) 80%, transparent)",
-          }}
+          style={{ height: "1px", background: "var(--border)" }}
         />
 
         {/* Top Row */}
@@ -86,11 +82,7 @@ export default function Footer() {
         {/* Bottom divider */}
         <div
           className="mb-6"
-          style={{
-            height: "1px",
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.06) 80%, transparent)",
-          }}
+          style={{ height: "1px", background: "var(--border)" }}
         />
 
         {/* Bottom Row */}

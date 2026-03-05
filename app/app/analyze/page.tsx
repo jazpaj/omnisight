@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ProgressRing from "@/components/ui/ProgressRing";
 import NeonBadge from "@/components/ui/NeonBadge";
 import type { VisionAnalysis } from "@/lib/data/analyses";
 
@@ -86,8 +85,8 @@ export default function AnalyzePage() {
           <div
             className="card p-8 text-center cursor-pointer transition-all"
             style={{
-              borderColor: dragOver ? "rgba(0,240,255,0.4)" : undefined,
-              background: dragOver ? "rgba(0,240,255,0.04)" : undefined,
+              borderColor: dragOver ? "var(--border-hover)" : undefined,
+              background: dragOver ? "var(--accent-subtle)" : undefined,
               minHeight: "240px",
             }}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -126,9 +125,9 @@ export default function AnalyzePage() {
                 onClick={() => setAnalysisType(t.key)}
                 className="flex-1 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer"
                 style={{
-                  background: analysisType === t.key ? "rgba(0,240,255,0.1)" : "rgba(255,255,255,0.03)",
-                  border: `1px solid ${analysisType === t.key ? "rgba(0,240,255,0.3)" : "rgba(255,255,255,0.06)"}`,
-                  color: analysisType === t.key ? "#00F0FF" : "rgba(255,255,255,0.5)",
+                  background: analysisType === t.key ? "var(--surface-2)" : "var(--surface-1)",
+                  border: `1px solid ${analysisType === t.key ? "var(--border-hover)" : "var(--border)"}`,
+                  color: analysisType === t.key ? "var(--text-primary)" : "var(--text-secondary)",
                 }}
               >
                 {t.label}
@@ -159,7 +158,7 @@ export default function AnalyzePage() {
                 className="card p-8 flex flex-col items-center justify-center"
                 style={{ minHeight: "400px" }}
               >
-                <ProgressRing value={75} size={64} />
+                <div className="w-10 h-10 rounded-full border-2 border-white/10 border-t-[var(--accent)] animate-spin" />
                 <p className="text-sm text-white/50 mt-4">Analyzing with {types.find(t => t.key === analysisType)?.agent}...</p>
               </motion.div>
             )}

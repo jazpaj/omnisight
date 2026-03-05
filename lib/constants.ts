@@ -37,9 +37,9 @@ export const FOUNDER = {
 };
 
 export const AGENT_COLORS = {
-  retina: "#00F0FF",
-  spectrum: "#A855F7",
-  genesis: "#34D399",
-  cortex: "#FACC15",
-  nexus: "#F97316",
+  retina: "#5eead4",
+  spectrum: "#a78bfa",
+  genesis: "#6ee7b7",
+  cortex: "#fde68a",
+  nexus: "#fdba74",
 } as const;

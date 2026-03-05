@@ -12,7 +12,7 @@ export default function ProgressRing({
   value,
   size = 48,
   strokeWidth = 3,
-  color = "#00F0FF",
+  color = "#5eead4",
   className = "",
 }: ProgressRingProps) {
   const radius = (size - strokeWidth) / 2;
@@ -41,7 +41,7 @@ export default function ProgressRing({
           strokeDashoffset={offset}
           strokeLinecap="round"
           className="transition-all duration-700 ease-out"
-          style={{ filter: `drop-shadow(0 0 4px ${color}40)` }}
+          style={{}}
         />
       </svg>
       <span

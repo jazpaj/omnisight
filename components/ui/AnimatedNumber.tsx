@@ -44,10 +44,10 @@ export default function AnimatedNumber({
 
   const colorClass =
     directionRef.current === "up"
-      ? "text-neon-green"
+      ? "text-white"
       : directionRef.current === "down"
-        ? "text-neon-red"
-        : "text-foreground";
+        ? "text-white/60"
+        : "text-white";
 
   return (
     <motion.span

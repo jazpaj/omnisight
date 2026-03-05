@@ -2,7 +2,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import MouseTrackTilt from "@/components/ui/MouseTrackTilt";
 
 interface Capability {
   title: string;
@@ -20,20 +19,20 @@ const capabilities: Capability[] = [
     title: "Visual Analysis",
     description:
       "Autonomous chart, NFT, and image analysis powered by multimodal AI. Detect patterns, extract features, and generate insights automatically.",
-    accent: "#00F0FF",
+    accent: "#5eead4",
     features: [
       "Chart pattern recognition (triangles, wedges, channels)",
       "NFT rarity trait extraction and scoring",
       "Multi-frame temporal analysis for video snapshots",
     ],
     gridClass: "md:col-span-2 md:row-span-2",
-    bgClass: "dot-grid",
+    bgClass: "",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
         <defs>
           <linearGradient id="icon-grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#00F0FF" />
-            <stop offset="100%" stopColor="#00F0FF" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#5eead4" />
+            <stop offset="100%" stopColor="#5eead4" stopOpacity="0.4" />
           </linearGradient>
         </defs>
         <path
@@ -49,7 +48,7 @@ const capabilities: Capability[] = [
     visual: (
       <div className="mt-6 flex gap-2 flex-wrap">
         {(["CHART", "NFT", "PORTRAIT"] as const).map((type, i) => {
-          const colors = ["#00F0FF", "#A855F7", "#34d399"];
+          const colors = ["#5eead4", "#a78bfa", "#6ee7b7"];
           return (
             <div
               key={type}
@@ -76,7 +75,7 @@ const capabilities: Capability[] = [
     title: "Generative Identity",
     description:
       "Zero-shot avatar and PFP generation from any reference image. Create unique AI-powered visual identities instantly.",
-    accent: "#A855F7",
+    accent: "#a78bfa",
     features: [
       "Zero-shot portrait generation from a single reference",
       "Style transfer across artistic genres",
@@ -88,8 +87,8 @@ const capabilities: Capability[] = [
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
         <defs>
           <linearGradient id="icon-grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#A855F7" />
-            <stop offset="100%" stopColor="#A855F7" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#a78bfa" />
+            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.4" />
           </linearGradient>
         </defs>
         <path
@@ -115,7 +114,7 @@ const capabilities: Capability[] = [
     title: "Vision-as-a-Service API",
     description:
       "REST API for other agents and dApps to access image understanding. Plug OMNISIGHT vision into any pipeline.",
-    accent: "#34d399",
+    accent: "#6ee7b7",
     features: [
       "Simple REST API with JSON responses",
       "Batch processing for high-volume workloads",
@@ -127,8 +126,8 @@ const capabilities: Capability[] = [
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
         <defs>
           <linearGradient id="icon-grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#34d399" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#6ee7b7" />
+            <stop offset="100%" stopColor="#6ee7b7" stopOpacity="0.4" />
           </linearGradient>
         </defs>
         <path
@@ -146,7 +145,7 @@ const capabilities: Capability[] = [
     title: "On-Chain Proof",
     description:
       "Verifiable generation receipts stored on Solana for every analysis. Tamper-proof evidence of AI-generated insights.",
-    accent: "#F97316",
+    accent: "#fdba74",
     features: [
       "SHA-256 hash of analysis stored on Solana",
       "Timestamped and publicly verifiable",
@@ -158,8 +157,8 @@ const capabilities: Capability[] = [
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24">
         <defs>
           <linearGradient id="icon-grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F97316" />
-            <stop offset="100%" stopColor="#F97316" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#fdba74" />
+            <stop offset="100%" stopColor="#fdba74" stopOpacity="0.4" />
           </linearGradient>
         </defs>
         <path
@@ -177,12 +176,12 @@ const capabilities: Capability[] = [
         <div
           className="flex items-center gap-2 px-3 py-2 rounded-lg flex-1"
           style={{
-            background: "rgba(249,115,22,0.06)",
-            border: "1px solid rgba(249,115,22,0.15)",
+            background: "rgba(253,186,116,0.06)",
+            border: "1px solid rgba(253,186,116,0.15)",
           }}
         >
           <svg
-            className="w-3.5 h-3.5 text-[#F97316] shrink-0"
+            className="w-3.5 h-3.5 text-[#fdba74] shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -209,11 +208,11 @@ const capabilities: Capability[] = [
             </div>
           </div>
           <span
-            className="text-[9px] text-[#34d399] shrink-0 px-2 py-0.5 rounded-full"
+            className="text-[9px] text-[#6ee7b7] shrink-0 px-2 py-0.5 rounded-full"
             style={{
               fontFamily: "var(--font-fragment-mono)",
-              background: "rgba(52,211,153,0.1)",
-              border: "1px solid rgba(52,211,153,0.2)",
+              background: "rgba(110,231,183,0.1)",
+              border: "1px solid rgba(110,231,183,0.2)",
             }}
           >
             verified
@@ -222,8 +221,8 @@ const capabilities: Capability[] = [
         <div
           className="flex items-center gap-2 px-3 py-2 rounded-lg"
           style={{
-            background: "rgba(249,115,22,0.04)",
-            border: "1px solid rgba(249,115,22,0.1)",
+            background: "rgba(253,186,116,0.04)",
+            border: "1px solid rgba(253,186,116,0.1)",
           }}
         >
           <div>
@@ -305,7 +304,7 @@ export default function Capabilities() {
               delay={cardIdx * 0.1}
               className={cap.gridClass}
             >
-              <MouseTrackTilt intensity={4} className="h-full">
+              <div className="h-full">
                 <div
                   className="glass-card p-8 h-full group cursor-default relative overflow-hidden"
                 >
@@ -322,13 +321,11 @@ export default function Capabilities() {
                       className="absolute inset-0 pointer-events-none opacity-30"
                       style={{
                         background:
-                          "radial-gradient(circle at 50% 50%, rgba(168,85,247,0.12), transparent 70%)",
+                          "radial-gradient(circle at 50% 50%, rgba(167,139,250,0.12), transparent 70%)",
                       }}
                     />
                   )}
 
-                  {/* Card 3: scan-line effect */}
-                  {cardIdx === 2 && <div className="scan-line opacity-50" />}
 
                   <div className="relative z-10">
                     {/* Hero card (card 1) has side-by-side layout */}
@@ -337,7 +334,7 @@ export default function Capabilities() {
                         <div className="flex-1">
                           {/* Icon */}
                           <div
-                            className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
+                            className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300"
                             style={{ color: cap.accent }}
                           >
                             {cap.icon}
@@ -370,7 +367,7 @@ export default function Capabilities() {
                       <>
                         {/* Icon */}
                         <div
-                          className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
+                          className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300"
                           style={{ color: cap.accent }}
                         >
                           {cap.icon}
@@ -398,7 +395,7 @@ export default function Capabilities() {
                     )}
                   </div>
                 </div>
-              </MouseTrackTilt>
+              </div>
             </ScrollReveal>
           ))}
         </div>

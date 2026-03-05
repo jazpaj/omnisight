@@ -86,9 +86,9 @@ export default function GeneratePage() {
                   onClick={() => setSelectedStyle(style)}
                   className="px-4 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer"
                   style={{
-                    background: selectedStyle === style ? "rgba(168,85,247,0.15)" : "rgba(255,255,255,0.03)",
-                    border: `1px solid ${selectedStyle === style ? "rgba(168,85,247,0.4)" : "rgba(255,255,255,0.06)"}`,
-                    color: selectedStyle === style ? "#A855F7" : "rgba(255,255,255,0.5)",
+                    background: selectedStyle === style ? "var(--surface-2)" : "var(--surface-1)",
+                    border: `1px solid ${selectedStyle === style ? "var(--border-hover)" : "var(--border)"}`,
+                    color: selectedStyle === style ? "var(--text-primary)" : "var(--text-secondary)",
                   }}
                 >
                   {style}
