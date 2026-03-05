@@ -158,12 +158,18 @@ export default function AgentShowcase() {
                 const thumbAgentType = agent.id as AgentType;
 
                 return (
-                  <button
+                  <motion.button
                     key={agent.id}
                     onClick={() => setSelectedId(agent.id)}
+                    whileHover={{ scale: isSelected ? 1 : 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    transition={{ duration: 0.15 }}
                     className="card p-4 w-full text-left cursor-pointer transition-all duration-200"
                     style={{
-                      borderColor: isSelected ? `${agent.color}30` : undefined,
+                      borderColor: isSelected ? `${agent.color}40` : undefined,
+                      background: isSelected ? `${agent.color}08` : undefined,
+                      borderLeft: isSelected ? `3px solid ${agent.color}60` : undefined,
+                      paddingLeft: isSelected ? "13px" : undefined,
                     }}
                   >
                     <div className="flex items-center gap-4">
@@ -209,7 +215,7 @@ export default function AgentShowcase() {
                         </div>
                       </div>
                     </div>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>

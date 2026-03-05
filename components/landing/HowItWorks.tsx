@@ -89,39 +89,67 @@ export default function HowItWorks() {
 
         {/* Cards grid — unified scroll reveal */}
         <ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {steps.map((step, i) => (
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 16 }}
-                animate={isInView ? { opacity: 1, y: 0 } : undefined}
-                transition={{ delay: i * 0.1, duration: 0.4 }}
-                className="card p-6"
-              >
-                {/* Icon */}
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${step.accent}12`, color: step.accent }}
+              <div key={step.number} className="relative">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : undefined}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
+                  className="card p-6 relative overflow-hidden"
                 >
-                  {step.icon}
-                </div>
+                  {/* Faded step number watermark */}
+                  <span
+                    className="absolute top-3 right-4 text-[40px] font-bold leading-none select-none pointer-events-none"
+                    style={{
+                      color: `${step.accent}12`,
+                      fontFamily: "var(--font-fragment-mono)",
+                    }}
+                  >
+                    {step.number}
+                  </span>
 
-                {/* Step label */}
-                <span
-                  className="text-xs font-medium tracking-widest mb-2 block"
-                  style={{ color: step.accent, fontFamily: "var(--font-fragment-mono)" }}
-                >
-                  {step.label}
-                </span>
+                  {/* Icon */}
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                    style={{ background: `${step.accent}12`, color: step.accent }}
+                  >
+                    {step.icon}
+                  </div>
 
-                {/* Title */}
-                <h3 className="text-lg font-medium text-white mb-2">{step.title}</h3>
+                  {/* Step label */}
+                  <span
+                    className="text-xs font-medium tracking-widest mb-2 block"
+                    style={{ color: step.accent, fontFamily: "var(--font-fragment-mono)" }}
+                  >
+                    {step.label}
+                  </span>
 
-                {/* Description */}
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-                  {step.description}
-                </p>
-              </motion.div>
+                  {/* Title */}
+                  <h3 className="text-lg font-medium text-white mb-2">{step.title}</h3>
+
+                  {/* Description */}
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                    {step.description}
+                  </p>
+                </motion.div>
+
+                {/* Arrow connector between steps — desktop only */}
+                {i < steps.length - 1 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-[15px] -translate-y-1/2 z-10">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path
+                        d="M2 8h10M9 4l4 4-4 4"
+                        stroke={step.accent}
+                        strokeWidth={1.5}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeOpacity={0.35}
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </ScrollReveal>

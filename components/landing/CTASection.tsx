@@ -15,6 +15,14 @@ export default function CTASection() {
       className="relative overflow-hidden"
       style={{ padding: "120px 24px" }}
     >
+      {/* Subtle spotlight background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(94,234,212,0.03), transparent 70%)",
+        }}
+      />
+
       {/* Content */}
       <div ref={ref} className="relative z-10 max-w-3xl mx-auto text-center">
         <motion.div

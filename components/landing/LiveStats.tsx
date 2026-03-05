@@ -72,7 +72,19 @@ export default function LiveStats() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Hero stat card */}
           <ScrollReveal direction="left" className="md:col-span-2 md:row-span-3">
-            <div className="card p-8 md:p-10 h-full flex flex-col justify-center">
+            <div className="card p-8 md:p-10 h-full flex flex-col justify-center relative overflow-hidden">
+              {/* Subtle radial glow */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  top: "50%",
+                  left: "30%",
+                  transform: "translate(-50%, -50%)",
+                  width: "300px",
+                  height: "200px",
+                  background: "radial-gradient(ellipse, rgba(94,234,212,0.04), transparent 70%)",
+                }}
+              />
               <div
                 className="text-xs uppercase tracking-widest mb-3"
                 style={{ color: heroStat.color, fontFamily: "var(--font-fragment-mono)" }}
@@ -103,14 +115,17 @@ export default function LiveStats() {
           {/* Small stat cards */}
           {smallStats.map((stat, i) => (
             <ScrollReveal key={stat.label} direction={stat.direction} delay={i * 0.08}>
-              <div className="card p-6 h-full">
+              <div
+                className="card p-6 h-full"
+                style={{ borderTop: `2px solid ${stat.color}30` }}
+              >
                 <div
                   className="text-[10px] uppercase tracking-widest mb-2"
                   style={{ color: stat.color, fontFamily: "var(--font-fragment-mono)" }}
                 >
                   {stat.label}
                 </div>
-                <div className="text-2xl md:text-3xl font-semibold font-mono text-white">
+                <div className="text-2xl md:text-3xl font-semibold font-mono" style={{ color: stat.color }}>
                   {hasBeenInView ? (
                     <AnimatedNumber
                       value={stat.value}

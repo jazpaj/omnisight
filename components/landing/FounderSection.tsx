@@ -21,10 +21,15 @@ export default function FounderSection() {
           {/* Left Panel - Identity */}
           <ScrollReveal direction="left">
             <div className="flex flex-col items-center md:items-start">
-              {/* Avatar — clean, no rotating border */}
-              <div className="relative w-28 h-28 mb-6">
+              {/* Avatar with hover ring */}
+              <div className="relative w-28 h-28 mb-6 group">
+                {/* Decorative outer ring — appears on hover */}
                 <div
-                  className="w-full h-full rounded-full flex items-center justify-center"
+                  className="absolute -inset-2 rounded-full transition-opacity duration-500 opacity-0 group-hover:opacity-100"
+                  style={{ border: "1px solid var(--border-hover)" }}
+                />
+                <div
+                  className="w-full h-full rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
                   style={{
                     background: "linear-gradient(135deg, rgba(94,234,212,0.12), rgba(167,139,250,0.12))",
                     border: "1px solid var(--border)",

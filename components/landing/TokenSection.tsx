@@ -85,9 +85,10 @@ export default function TokenSection() {
         {/* Static $OMNI badge instead of 3D rotating token */}
         <ScrollReveal className="flex justify-center mb-14">
           <div
-            className="px-6 py-3 rounded-full"
+            className="px-6 py-3 rounded-full badge-animated"
             style={{
-              background: "linear-gradient(135deg, rgba(94,234,212,0.08), rgba(167,139,250,0.08))",
+              background: "linear-gradient(135deg, rgba(94,234,212,0.08), rgba(167,139,250,0.12), rgba(94,234,212,0.08))",
+              backgroundSize: "200% 200%",
               border: "1px solid var(--border)",
             }}
           >

@@ -306,7 +306,7 @@ export default function Capabilities() {
             >
               <div className="h-full">
                 <div
-                  className="glass-card p-8 h-full group cursor-default relative overflow-hidden"
+                  className="glass-card p-8 h-full group cursor-pointer relative overflow-hidden"
                 >
                   {/* Background treatment per card */}
                   {cap.bgClass && (
@@ -334,7 +334,7 @@ export default function Capabilities() {
                         <div className="flex-1">
                           {/* Icon */}
                           <div
-                            className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300"
+                            className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
                             style={{ color: cap.accent }}
                           >
                             {cap.icon}
@@ -367,7 +367,7 @@ export default function Capabilities() {
                       <>
                         {/* Icon */}
                         <div
-                          className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300"
+                          className="w-12 h-12 rounded-xl glass-card flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
                           style={{ color: cap.accent }}
                         >
                           {cap.icon}

@@ -228,6 +228,13 @@ export default function Hero() {
                     }}
                   >
                     <div className="w-full h-full flex items-center justify-center relative">
+                      {/* Subtle gradient overlay */}
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: "linear-gradient(180deg, transparent 0%, rgba(94,234,212,0.03) 60%, rgba(94,234,212,0.06) 100%)",
+                        }}
+                      />
                       <div
                         className="text-[9px]"
                         style={{
@@ -249,8 +256,8 @@ export default function Hero() {
                               style={{
                                 height: `${h}px`,
                                 background: isGreen
-                                  ? "rgba(110,231,183,0.3)"
-                                  : "rgba(248,113,113,0.3)",
+                                  ? `rgba(110,231,183,${0.25 + (i / 24) * 0.2})`
+                                  : `rgba(248,113,113,${0.20 + (i / 24) * 0.15})`,
                               }}
                             />
                           );
@@ -264,12 +271,14 @@ export default function Hero() {
                       style={{ background: "var(--surface-2)" }}
                     >
                       <div
-                        className="h-full rounded-full"
+                        className="h-full rounded-full relative overflow-hidden"
                         style={{
                           width: "87%",
                           background: "linear-gradient(90deg, var(--accent), var(--accent-2))",
                         }}
-                      />
+                      >
+                        <div className="absolute inset-0 shimmer-bar" />
+                      </div>
                     </div>
                     <span
                       className="text-[7px]"
@@ -323,14 +332,19 @@ export default function Hero() {
                       <span className="text-[7px]" style={{ color: "var(--text-tertiary)" }}>
                         {r.label}
                       </span>
-                      <span
-                        className="text-[7px] font-medium"
-                        style={{
-                          color: r.signal === "bullish" ? "var(--success)" : "var(--text-secondary)",
-                          fontFamily: "var(--font-fragment-mono)",
-                        }}
-                      >
-                        {r.value}
+                      <span className="flex items-center gap-1">
+                        {r.signal === "bullish" && (
+                          <span className="w-1 h-1 rounded-full pulse-live" style={{ background: "var(--success)" }} />
+                        )}
+                        <span
+                          className="text-[7px] font-medium"
+                          style={{
+                            color: r.signal === "bullish" ? "var(--success)" : "var(--text-secondary)",
+                            fontFamily: "var(--font-fragment-mono)",
+                          }}
+                        >
+                          {r.value}
+                        </span>
                       </span>
                     </div>
                   ))}

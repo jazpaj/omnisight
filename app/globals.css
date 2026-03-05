@@ -16,7 +16,7 @@
   --text-primary: rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.60);
   --text-tertiary: rgba(255, 255, 255, 0.40);
-  --text-quaternary: rgba(255, 255, 255, 0.25);
+  --text-quaternary: rgba(255, 255, 255, 0.30);
 
   /* Primary accent: Soft teal */
   --accent: #5eead4;
@@ -96,18 +96,7 @@ html {
    CARDS
    ================================================ */
 
-.card {
-  background: var(--surface-1);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.card:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-}
-
+.card,
 .glass-card {
   background: var(--surface-1);
   border: 1px solid var(--border);
@@ -115,6 +104,7 @@ html {
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
+.card:hover,
 .glass-card:hover {
   background: var(--surface-hover);
   border-color: var(--border-hover);
@@ -142,15 +132,29 @@ html {
   color: #000;
   font-weight: 500;
   border-radius: 8px;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 
 .btn-gradient:hover,
 .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+  opacity: 0.92;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 16px rgba(94, 234, 212, 0.15), 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-gradient:active,
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+  opacity: 0.95;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-gradient:focus-visible,
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .btn-outline,
@@ -158,13 +162,24 @@ html {
   border: 1px solid var(--border);
   color: var(--text-secondary);
   border-radius: 8px;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 .btn-outline:hover,
 .btn-secondary:hover {
   border-color: var(--border-hover);
   color: var(--text-primary);
+}
+
+.btn-outline:active,
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-outline:focus-visible,
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--border-hover);
+  outline-offset: 2px;
 }
 
 /* ================================================
@@ -206,6 +221,12 @@ html {
   font-weight: 500;
   background: var(--surface-2);
   color: var(--text-tertiary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tag:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
 }
 
 /* ================================================
@@ -224,6 +245,19 @@ html {
 
 .section-premium {
   padding: 120px 32px;
+  position: relative;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255, 255, 255, 0.015), transparent);
+}
+
+.section-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 @media (max-width: 768px) {
@@ -268,6 +302,27 @@ html {
 
 .animate-fade-in-up {
   animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Shimmer — for confidence bars, loading states */
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.shimmer-bar {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.06) 50%, transparent 100%);
+  animation: shimmer-slide 3s ease-in-out infinite;
+}
+
+/* Gradient shift — for token badge, slow breathing bg */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.badge-animated {
+  animation: gradient-shift 6s ease-in-out infinite;
 }
 
 /* ================================================
