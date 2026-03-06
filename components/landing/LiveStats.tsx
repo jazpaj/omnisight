@@ -14,10 +14,10 @@ interface StatItem {
 }
 
 const initialStats: StatItem[] = [
-  { label: "Images Analyzed", value: 58000, suffix: "+", decimals: 0, color: "#5eead4", direction: "left" },
+  { label: "Images Analyzed", value: 4217, suffix: "+", decimals: 0, color: "#5eead4", direction: "left" },
   { label: "Agents Active", value: 5, suffix: "", decimals: 0, color: "#a78bfa", direction: "right" },
-  { label: "Avg Confidence", value: 94.2, suffix: "%", decimals: 1, color: "#6ee7b7", direction: "right" },
-  { label: "On-Chain Receipts", value: 41000, suffix: "+", decimals: 0, color: "#fdba74", direction: "up" },
+  { label: "Avg Confidence", value: 91.7, suffix: "%", decimals: 1, color: "#6ee7b7", direction: "right" },
+  { label: "On-Chain Receipts", value: 3841, suffix: "+", decimals: 0, color: "#fdba74", direction: "up" },
 ];
 
 export default function LiveStats() {
@@ -36,16 +36,16 @@ export default function LiveStats() {
         prev.map((s) => {
           let newValue = s.value;
           if (s.label === "Images Analyzed") {
-            newValue = s.value + Math.floor(Math.random() * 30) + 5;
+            newValue = s.value + Math.floor(Math.random() * 3) + 1;
           } else if (s.label === "Avg Confidence") {
-            newValue = Math.max(90, Math.min(98, s.value + (Math.random() - 0.45) * 0.2));
+            newValue = Math.max(88, Math.min(95, s.value + (Math.random() - 0.48) * 0.15));
           } else if (s.label === "On-Chain Receipts") {
-            newValue = s.value + Math.floor(Math.random() * 20) + 3;
+            newValue = s.value + Math.floor(Math.random() * 2) + 1;
           }
           return { ...s, value: newValue };
         })
       );
-    }, 3000);
+    }, 12000);
     return () => clearInterval(interval);
   }, []);
 

@@ -5,20 +5,20 @@ import OmnisightLogo from "@/components/ui/OmnisightLogo";
 import PulsingDot from "@/components/ui/PulsingDot";
 
 const mockAgents = [
-  { name: "RETINA", color: "#5eead4", confidence: "96%" },
-  { name: "SPECTRUM", color: "#a78bfa", confidence: "93%" },
-  { name: "GENESIS", color: "#6ee7b7", confidence: "90%" },
-  { name: "CORTEX", color: "#fde68a", confidence: "94%" },
-  { name: "NEXUS", color: "#fdba74", confidence: "91%" },
+  { name: "RETINA", color: "#5eead4", confidence: "93%" },
+  { name: "SPECTRUM", color: "#a78bfa", confidence: "89%" },
+  { name: "GENESIS", color: "#6ee7b7", confidence: "87%" },
+  { name: "CORTEX", color: "#fde68a", confidence: "91%" },
+  { name: "NEXUS", color: "#fdba74", confidence: "88%" },
 ];
 
 const mockResults = [
-  { label: "Pattern", value: "Ascending Triangle", signal: "bullish" },
+  { label: "Pattern", value: "Asc. Triangle", signal: "bullish" },
   { label: "Trend", value: "Bullish", signal: "bullish" },
-  { label: "Support", value: "$142.5", signal: "neutral" },
-  { label: "Resistance", value: "$155.0", signal: "neutral" },
-  { label: "RSI", value: "62.4", signal: "neutral" },
-  { label: "Confidence", value: "87%", signal: "bullish" },
+  { label: "Support", value: "$141.8", signal: "neutral" },
+  { label: "Resistance", value: "$153.4", signal: "neutral" },
+  { label: "RSI", value: "58.7", signal: "neutral" },
+  { label: "Confidence", value: "84%", signal: "bullish" },
 ];
 
 export default function Hero() {
@@ -273,7 +273,7 @@ export default function Hero() {
                       <div
                         className="h-full rounded-full relative overflow-hidden"
                         style={{
-                          width: "87%",
+                          width: "84%",
                           background: "linear-gradient(90deg, var(--accent), var(--accent-2))",
                         }}
                       >
@@ -287,7 +287,7 @@ export default function Hero() {
                         fontFamily: "var(--font-fragment-mono)",
                       }}
                     >
-                      87%
+                      84%
                     </span>
                   </div>
                   <div
@@ -297,7 +297,7 @@ export default function Hero() {
                       fontFamily: "var(--font-fragment-mono)",
                     }}
                   >
-                    Analysis complete &bull; 1.24s
+                    Analysis complete &bull; 1.18s
                   </div>
                 </div>
               </div>
