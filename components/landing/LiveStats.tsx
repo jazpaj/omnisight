@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
@@ -13,41 +13,75 @@ interface StatItem {
   direction: "left" | "right" | "up";
 }
 
-const initialStats: StatItem[] = [
-  { label: "Images Analyzed", value: 4217, suffix: "+", decimals: 0, color: "#5eead4", direction: "left" },
-  { label: "Agents Active", value: 5, suffix: "", decimals: 0, color: "#a78bfa", direction: "right" },
-  { label: "Avg Confidence", value: 91.7, suffix: "%", decimals: 1, color: "#6ee7b7", direction: "right" },
-  { label: "On-Chain Receipts", value: 3841, suffix: "+", decimals: 0, color: "#fdba74", direction: "up" },
-];
+/* ---------- seed values anchored to "launch date" ---------- */
+// Base counts grow deterministically from a fixed launch epoch
+// so every visitor sees a consistent, slowly-growing number.
+function seededStats(): StatItem[] {
+  const LAUNCH = new Date("2025-02-14T00:00:00Z").getTime();
+  const elapsed = Date.now() - LAUNCH;
+  const hours = elapsed / 3_600_000;
+
+  // ~1.8 images / hour on average → grows slowly day by day
+  const images = Math.floor(2104 + hours * 1.8);
+  // ~85% of analyses get an on-chain receipt
+  const receipts = Math.floor(images * 0.84);
+
+  return [
+    { label: "Images Analyzed", value: images, suffix: "+", decimals: 0, color: "#5eead4", direction: "left" },
+    { label: "Agents Active", value: 5, suffix: "", decimals: 0, color: "#a78bfa", direction: "right" },
+    { label: "Avg Confidence", value: 91.3, suffix: "%", decimals: 1, color: "#6ee7b7", direction: "right" },
+    { label: "On-Chain Receipts", value: receipts, suffix: "+", decimals: 0, color: "#fdba74", direction: "up" },
+  ];
+}
 
 export default function LiveStats() {
-  const [stats, setStats] = useState<StatItem[]>(initialStats);
+  const [stats, setStats] = useState<StatItem[]>(seededStats);
   const [hasBeenInView, setHasBeenInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
     if (isInView && !hasBeenInView) setHasBeenInView(true);
   }, [isInView, hasBeenInView]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) =>
-        prev.map((s) => {
-          let newValue = s.value;
-          if (s.label === "Images Analyzed") {
-            newValue = s.value + Math.floor(Math.random() * 3) + 1;
-          } else if (s.label === "Avg Confidence") {
-            newValue = Math.max(88, Math.min(95, s.value + (Math.random() - 0.48) * 0.15));
-          } else if (s.label === "On-Chain Receipts") {
-            newValue = s.value + Math.floor(Math.random() * 2) + 1;
-          }
-          return { ...s, value: newValue };
-        })
-      );
-    }, 12000);
-    return () => clearInterval(interval);
+  /* --- organic tick with variable interval --- */
+  const tick = useCallback(() => {
+    setStats((prev) =>
+      prev.map((s) => {
+        let v = s.value;
+        if (s.label === "Images Analyzed") {
+          // 30% chance of no change (quiet moment), 50% +1, 15% +2, 5% +3
+          const r = Math.random();
+          if (r > 0.70) v += 0;            // quiet
+          else if (r > 0.20) v += 1;       // normal
+          else if (r > 0.05) v += 2;       // busy
+          else v += Math.floor(Math.random() * 3) + 3; // burst
+        } else if (s.label === "Avg Confidence") {
+          // small Brownian drift, clamped
+          v = Math.max(88.5, Math.min(94.8, v + (Math.random() - 0.50) * 0.3));
+          v = Math.round(v * 10) / 10;
+        } else if (s.label === "On-Chain Receipts") {
+          // usually trails images; sometimes skips
+          const r = Math.random();
+          if (r > 0.35) v += 1;
+          else if (r > 0.10) v += 0;
+          else v += 2;
+        }
+        return { ...s, value: v };
+      })
+    );
+
+    // Next tick: 6-18s, feels irregular and alive
+    const next = 6000 + Math.random() * 12000;
+    timeoutRef.current = setTimeout(tick, next);
   }, []);
+
+  useEffect(() => {
+    // first tick after a short random delay
+    timeoutRef.current = setTimeout(tick, 4000 + Math.random() * 6000);
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
+  }, [tick]);
 
   const heroStat = stats[0];
   const smallStats = stats.slice(1);

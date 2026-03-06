@@ -28,11 +28,10 @@ export interface VisionAgent {
 }
 
 function generateRecentAnalyses(specialty: AgentSpecialty, count: number): AnalysisRecord[] {
-  const now = Date.now();
   const chartSummaries = [
     "Detected ascending triangle on SOL/USDT 4H",
     "Head and shoulders pattern forming on ETH daily",
-    "Strong support identified at $142 for SOL",
+    "Strong support identified at $141 for SOL",
     "Bullish divergence on RSI for BTC/USDT",
     "Double bottom confirmation on BONK/SOL",
     "Rising wedge pattern on JUP 1H chart",
@@ -40,9 +39,9 @@ function generateRecentAnalyses(specialty: AgentSpecialty, count: number): Analy
   const nftSummaries = [
     "Rare trait combination: Gold Crown + Laser Eyes (0.3%)",
     "Art style: Neo-futuristic digital painting, similar to BAYC",
-    "Collection floor analysis: 12.5 SOL, trending up 8%",
+    "Collection floor analysis: 11.8 SOL, trending up 6%",
     "Detected AI-generated art markers in collection",
-    "Rarity score 94/100 — top 2% in collection",
+    "Rarity score 91/100 — top 3% in collection",
   ];
   const portraitSummaries = [
     "Generated cyberpunk avatar from reference photo",
@@ -52,10 +51,10 @@ function generateRecentAnalyses(specialty: AgentSpecialty, count: number): Analy
     "Portrait depth map extracted for 3D reconstruction",
   ];
   const generalSummaries = [
-    "OCR extracted 47 text elements from screenshot",
-    "Detected 12 objects in scene with 96% confidence",
+    "OCR extracted 34 text elements from screenshot",
+    "Detected 9 objects in scene with 91% confidence",
     "Sentiment analysis: positive tone in visual content",
-    "Image quality assessment: 8.2/10, good lighting",
+    "Image quality assessment: 7.8/10, good lighting",
     "Classified as product photography with white background",
   ];
   const multimodalSummaries = [
@@ -96,11 +95,21 @@ function generateRecentAnalyses(specialty: AgentSpecialty, count: number): Analy
       id: `analysis-${specialty}-${i}`,
       imageType: typeMap[specialty],
       summary: summaries[i % summaries.length],
-      confidence: 85 + r1 * 13,
+      confidence: 82 + r1 * 14,
       timestamp: new Date(1709847261000 - (i + 1) * 1000 * 60 * (5 + r2 * 30)),
       processingTimeMs: 800 + r3 * 2200,
     };
   });
+}
+
+/* ---- Time-seeded agent stats ----
+   Base counts grow deterministically since a fixed launch date
+   so every visitor sees consistent, slowly-growing numbers. */
+const LAUNCH = new Date("2025-02-14T00:00:00Z").getTime();
+
+function agentAnalyses(base: number, ratePerHour: number): number {
+  const hours = (Date.now() - LAUNCH) / 3_600_000;
+  return Math.floor(base + hours * ratePerHour);
 }
 
 export const VISION_AGENTS: VisionAgent[] = [
@@ -113,7 +122,7 @@ export const VISION_AGENTS: VisionAgent[] = [
     description: "Chart pattern specialist. Identifies support/resistance levels, trend lines, candlestick patterns, and technical indicators with surgical precision.",
     color: "#5eead4",
     status: "active",
-    totalAnalyses: 1247,
+    totalAnalyses: agentAnalyses(482, 0.54),
     avgConfidence: 93.4,
     avgResponseTimeMs: 1180,
     uptime: 99.1,
@@ -129,7 +138,7 @@ export const VISION_AGENTS: VisionAgent[] = [
     description: "NFT and digital art analyst. Detects rarity traits, art style origins, collection patterns, and estimates value with cross-collection intelligence.",
     color: "#a78bfa",
     status: "active",
-    totalAnalyses: 486,
+    totalAnalyses: agentAnalyses(203, 0.22),
     avgConfidence: 89.7,
     avgResponseTimeMs: 1620,
     uptime: 97.8,
@@ -145,7 +154,7 @@ export const VISION_AGENTS: VisionAgent[] = [
     description: "Portrait and avatar specialist. Zero-shot identity generation from reference images, style transfer, and PFP creation across multiple art styles.",
     color: "#6ee7b7",
     status: "processing",
-    totalAnalyses: 312,
+    totalAnalyses: agentAnalyses(124, 0.14),
     avgConfidence: 87.2,
     avgResponseTimeMs: 2340,
     uptime: 96.3,
@@ -161,7 +170,7 @@ export const VISION_AGENTS: VisionAgent[] = [
     description: "General vision agent. Handles any image type with broad understanding — OCR, object detection, scene analysis, and quality assessment.",
     color: "#fde68a",
     status: "active",
-    totalAnalyses: 1891,
+    totalAnalyses: agentAnalyses(671, 0.68),
     avgConfidence: 91.8,
     avgResponseTimeMs: 940,
     uptime: 98.7,
@@ -177,7 +186,7 @@ export const VISION_AGENTS: VisionAgent[] = [
     description: "Multi-modal fusion agent. Combines visual analysis with text, on-chain data, and market signals for comprehensive intelligence reports.",
     color: "#fdba74",
     status: "idle",
-    totalAnalyses: 203,
+    totalAnalyses: agentAnalyses(87, 0.10),
     avgConfidence: 88.6,
     avgResponseTimeMs: 2680,
     uptime: 94.2,

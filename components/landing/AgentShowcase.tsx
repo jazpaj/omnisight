@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import AgentIcon from "@/components/ui/AgentIcon";
 import PulsingDot from "@/components/ui/PulsingDot";
-import { VISION_AGENTS } from "@/lib/data/agents";
+import { VISION_AGENTS, type VisionAgent } from "@/lib/data/agents";
 
 type AgentType = "retina" | "spectrum" | "genesis" | "cortex" | "nexus";
 
@@ -15,6 +15,8 @@ const statusColorMap: Record<string, "green" | "cyan" | "yellow" | "orange"> = {
   calibrating: "orange",
 };
 
+const statusOptions: ("active" | "processing" | "idle")[] = ["active", "processing", "idle"];
+
 function formatNumber(num: number): string {
   if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
   return String(num);
@@ -22,8 +24,52 @@ function formatNumber(num: number): string {
 
 export default function AgentShowcase() {
   const [selectedId, setSelectedId] = useState<string>("retina");
-  const selectedAgent = VISION_AGENTS.find((a) => a.id === selectedId) ?? VISION_AGENTS[0];
+  const [agents, setAgents] = useState<VisionAgent[]>(VISION_AGENTS);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const selectedAgent = agents.find((a) => a.id === selectedId) ?? agents[0];
   const agentType = selectedAgent.id as AgentType;
+
+  /* --- live agent stat updates --- */
+  const tick = useCallback(() => {
+    setAgents((prev) =>
+      prev.map((agent) => {
+        const r = Math.random();
+
+        // Slowly increment analyses (some agents busier than others)
+        let analyses = agent.totalAnalyses;
+        if (r > 0.6) analyses += 1;
+        else if (r < 0.08) analyses += 2;
+
+        // Confidence drifts slightly like a real running average
+        let conf = agent.avgConfidence + (Math.random() - 0.50) * 0.4;
+        conf = Math.max(84, Math.min(96, conf));
+        conf = Math.round(conf * 10) / 10;
+
+        // Occasionally shift status (rare — ~3% chance per tick)
+        let status = agent.status;
+        if (Math.random() < 0.03) {
+          const pool = statusOptions.filter((s) => s !== status);
+          status = pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        // Response time drifts slightly
+        let rt = agent.avgResponseTimeMs + (Math.random() - 0.50) * 60;
+        rt = Math.max(600, Math.round(rt));
+
+        return { ...agent, totalAnalyses: analyses, avgConfidence: conf, status, avgResponseTimeMs: rt };
+      })
+    );
+
+    // Variable interval: 8-20s
+    const next = 8000 + Math.random() * 12000;
+    timeoutRef.current = setTimeout(tick, next);
+  }, []);
+
+  useEffect(() => {
+    timeoutRef.current = setTimeout(tick, 5000 + Math.random() * 8000);
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
+  }, [tick]);
 
   return (
     <section id="agents" className="section-premium relative">
@@ -83,7 +129,7 @@ export default function AgentShowcase() {
                                 : "Multi-Modal Fusion"}
                       </p>
                       <div
-                        className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider"
+                        className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-wider transition-colors duration-500"
                         style={{
                           background: `${selectedAgent.color}10`,
                           border: `1px solid ${selectedAgent.color}20`,
@@ -105,13 +151,13 @@ export default function AgentShowcase() {
                     {selectedAgent.description}
                   </p>
 
-                  {/* Confidence + Analyses as text */}
+                  {/* Confidence + Analyses + Response Time */}
                   <div className="flex items-center gap-8 mb-6">
                     <div>
                       <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: "var(--text-quaternary)", fontFamily: "var(--font-fragment-mono)" }}>
                         Confidence
                       </div>
-                      <div className="text-lg font-semibold" style={{ color: selectedAgent.color, fontFamily: "var(--font-fragment-mono)" }}>
+                      <div className="text-lg font-semibold tabular-nums" style={{ color: selectedAgent.color, fontFamily: "var(--font-fragment-mono)" }}>
                         {selectedAgent.avgConfidence.toFixed(1)}%
                       </div>
                     </div>
@@ -119,8 +165,16 @@ export default function AgentShowcase() {
                       <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: "var(--text-quaternary)", fontFamily: "var(--font-fragment-mono)" }}>
                         Analyses
                       </div>
-                      <div className="text-lg font-semibold gradient-text" style={{ fontFamily: "var(--font-fragment-mono)" }}>
+                      <div className="text-lg font-semibold gradient-text tabular-nums" style={{ fontFamily: "var(--font-fragment-mono)" }}>
                         {formatNumber(selectedAgent.totalAnalyses)}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: "var(--text-quaternary)", fontFamily: "var(--font-fragment-mono)" }}>
+                        Avg Time
+                      </div>
+                      <div className="text-lg font-semibold tabular-nums" style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-fragment-mono)" }}>
+                        {(selectedAgent.avgResponseTimeMs / 1000).toFixed(1)}s
                       </div>
                     </div>
                   </div>
@@ -153,7 +207,7 @@ export default function AgentShowcase() {
 
             {/* RIGHT — Agent selector cards */}
             <div className="w-full lg:w-1/2 flex flex-col gap-3">
-              {VISION_AGENTS.map((agent) => {
+              {agents.map((agent) => {
                 const isSelected = agent.id === selectedId;
                 const thumbAgentType = agent.id as AgentType;
 
@@ -209,7 +263,7 @@ export default function AgentShowcase() {
                           <div className="text-[9px] uppercase" style={{ color: "var(--text-quaternary)", fontFamily: "var(--font-fragment-mono)" }}>
                             conf
                           </div>
-                          <div className="text-xs font-medium" style={{ color: agent.color, fontFamily: "var(--font-fragment-mono)" }}>
+                          <div className="text-xs font-medium tabular-nums" style={{ color: agent.color, fontFamily: "var(--font-fragment-mono)" }}>
                             {agent.avgConfidence.toFixed(1)}%
                           </div>
                         </div>
