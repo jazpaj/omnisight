@@ -53,9 +53,9 @@ const utilities = [
 ];
 
 const tradeLinks = [
-  { name: "pump.fun", subtitle: "Trade $OMNI", url: TOKEN.pumpFunUrl },
-  { name: "DexScreener", subtitle: "Trade $OMNI", url: TOKEN.dexScreenerUrl },
-  { name: "Raydium", subtitle: "Trade $OMNI", url: TOKEN.raydiumUrl },
+  { name: "pump.fun", subtitle: "Trade $OMNI", url: TOKEN.pumpFunUrl, color: "#5eead4" },
+  { name: "DexScreener", subtitle: "Trade $OMNI", url: TOKEN.dexScreenerUrl, color: "#a78bfa" },
+  { name: "Raydium", subtitle: "Trade $OMNI", url: TOKEN.raydiumUrl, color: "#6ee7b7" },
 ];
 
 export default function TokenSection() {
@@ -68,8 +68,22 @@ export default function TokenSection() {
   };
 
   return (
-    <section id="token" className="section relative overflow-hidden">
-      <div className="max-w-5xl mx-auto">
+    <section id="token" className="section-premium relative overflow-hidden">
+      {/* Background radial glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 60% 40% at 50% 30%, rgba(94,234,212,0.04), transparent 70%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 40% 50% at 80% 70%, rgba(167,139,250,0.03), transparent 70%)",
+        }}
+      />
+
+      <div className="relative z-10 max-w-5xl mx-auto">
         {/* Section Header */}
         <ScrollReveal className="text-center mb-16">
           <div className="tag mx-auto mb-5 w-fit">{TOKEN.symbol}</div>
@@ -82,72 +96,105 @@ export default function TokenSection() {
           </p>
         </ScrollReveal>
 
-        {/* Static $OMNI badge instead of 3D rotating token */}
+        {/* Token badge — larger with glow ring */}
         <ScrollReveal className="flex justify-center mb-14">
-          <div
-            className="px-6 py-3 rounded-full badge-animated"
-            style={{
-              background: "linear-gradient(135deg, rgba(94,234,212,0.08), rgba(167,139,250,0.12), rgba(94,234,212,0.08))",
-              backgroundSize: "200% 200%",
-              border: "1px solid var(--border)",
-            }}
-          >
-            <span className="text-lg font-semibold gradient-text font-mono">$OMNI</span>
+          <div className="relative group">
+            {/* Outer glow ring */}
+            <div
+              className="absolute -inset-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              style={{
+                background: "radial-gradient(circle, rgba(94,234,212,0.08), transparent 70%)",
+              }}
+            />
+            {/* Inner decorative ring */}
+            <div
+              className="absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ border: "1px solid rgba(94,234,212,0.12)" }}
+            />
+            <div
+              className="relative px-8 py-4 rounded-full badge-animated cursor-default"
+              style={{
+                background: "linear-gradient(135deg, rgba(94,234,212,0.10), rgba(167,139,250,0.14), rgba(94,234,212,0.10))",
+                backgroundSize: "200% 200%",
+                border: "1px solid rgba(94,234,212,0.15)",
+              }}
+            >
+              <span className="text-xl font-bold gradient-text font-mono tracking-wider">$OMNI</span>
+            </div>
           </div>
         </ScrollReveal>
 
         {/* Contract Address Copy Bar */}
         <ScrollReveal className="mb-14">
-          <div className="card p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="text-xs uppercase tracking-wider shrink-0" style={{ color: "var(--text-quaternary)" }}>Contract</span>
-              <span className="text-sm md:text-lg font-mono truncate" style={{ color: "var(--text-secondary)" }}>
-                {TOKEN.contractAddress}
-              </span>
-            </div>
-            <button
-              onClick={copyAddress}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 shrink-0"
-              style={{
-                background: copied ? "rgba(110,231,183,0.12)" : "var(--accent-subtle)",
-                border: `1px solid ${copied ? "rgba(110,231,183,0.25)" : "var(--border)"}`,
-                color: copied ? "var(--success)" : "var(--accent)",
-              }}
+          <div
+            className="relative overflow-hidden rounded-xl p-[1px]"
+            style={{
+              background: "linear-gradient(135deg, rgba(94,234,212,0.15), rgba(167,139,250,0.10), rgba(94,234,212,0.15))",
+            }}
+          >
+            <div
+              className="rounded-xl p-4 md:p-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+              style={{ background: "var(--background)" }}
             >
-              <AnimatePresence mode="wait">
-                {copied ? (
-                  <motion.svg
-                    key="check"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </motion.svg>
-                ) : (
-                  <motion.svg
-                    key="copy"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
-                  </motion.svg>
-                )}
-              </AnimatePresence>
-              {copied ? "Copied!" : "Copy"}
-            </button>
+              <div className="flex items-center gap-3 min-w-0">
+                <span
+                  className="text-[10px] uppercase tracking-widest shrink-0 px-2 py-1 rounded-md"
+                  style={{
+                    color: "var(--accent)",
+                    background: "var(--accent-subtle)",
+                    fontFamily: "var(--font-fragment-mono)",
+                  }}
+                >
+                  CA
+                </span>
+                <span className="text-sm md:text-base font-mono truncate" style={{ color: "var(--text-secondary)" }}>
+                  {TOKEN.contractAddress}
+                </span>
+              </div>
+              <button
+                onClick={copyAddress}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 shrink-0 cursor-pointer"
+                style={{
+                  background: copied ? "rgba(110,231,183,0.12)" : "var(--accent-subtle)",
+                  border: `1px solid ${copied ? "rgba(110,231,183,0.25)" : "var(--border)"}`,
+                  color: copied ? "var(--success)" : "var(--accent)",
+                }}
+              >
+                <AnimatePresence mode="wait">
+                  {copied ? (
+                    <motion.svg
+                      key="check"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </motion.svg>
+                  ) : (
+                    <motion.svg
+                      key="copy"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                    </motion.svg>
+                  )}
+                </AnimatePresence>
+                {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
           </div>
         </ScrollReveal>
 
@@ -157,22 +204,45 @@ export default function TokenSection() {
           <ScrollReveal direction="left">
             <div className="space-y-3">
               <h3 className="text-xs uppercase tracking-widest mb-4" style={{ color: "var(--text-quaternary)" }}>Trade</h3>
-              {tradeLinks.map((link) => (
-                <a
+              {tradeLinks.map((link, i) => (
+                <motion.a
                   key={link.name}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="card flex items-center justify-between p-4 group"
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.4 }}
+                  whileHover={{ scale: 1.015 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="card flex items-center justify-between p-5 group cursor-pointer"
+                  style={{
+                    borderLeft: `2px solid ${link.color}30`,
+                  }}
                 >
-                  <div>
-                    <span className="text-sm font-medium block group-hover:text-white transition-colors" style={{ color: "var(--text-secondary)" }}>
-                      {link.name}
-                    </span>
-                    <span className="text-xs" style={{ color: "var(--text-quaternary)" }}>{link.subtitle}</span>
+                  <div className="flex items-center gap-4">
+                    {/* Trade icon */}
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
+                      style={{
+                        background: `${link.color}10`,
+                        color: link.color,
+                      }}
+                    >
+                      <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium block group-hover:text-white transition-colors" style={{ color: "var(--text-secondary)" }}>
+                        {link.name}
+                      </span>
+                      <span className="text-xs" style={{ color: "var(--text-quaternary)" }}>{link.subtitle}</span>
+                    </div>
                   </div>
                   <svg
-                    className="w-4 h-4 transition-colors"
+                    className="w-4 h-4 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     style={{ color: "var(--text-quaternary)" }}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -185,7 +255,7 @@ export default function TokenSection() {
                       d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
                     />
                   </svg>
-                </a>
+                </motion.a>
               ))}
             </div>
           </ScrollReveal>
@@ -202,18 +272,32 @@ export default function TokenSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08, duration: 0.4 }}
-                    className="card p-4"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="card p-5 group cursor-default relative overflow-hidden"
+                    style={{
+                      borderTop: `2px solid ${u.color}25`,
+                    }}
                   >
+                    {/* Subtle corner glow on hover */}
                     <div
-                      className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
-                      style={{ background: `${u.color}15`, color: u.color }}
-                    >
-                      {u.icon}
+                      className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      style={{
+                        background: `radial-gradient(circle, ${u.color}12, transparent 70%)`,
+                      }}
+                    />
+
+                    <div className="relative z-10">
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"
+                        style={{ background: `${u.color}12`, color: u.color }}
+                      >
+                        {u.icon}
+                      </div>
+                      <h4 className="text-sm font-medium text-white mb-1">{u.title}</h4>
+                      <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                        {u.description}
+                      </p>
                     </div>
-                    <h4 className="text-sm font-medium text-white mb-1">{u.title}</h4>
-                    <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-                      {u.description}
-                    </p>
                   </motion.div>
                 ))}
               </div>
