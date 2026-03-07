@@ -7,7 +7,13 @@ interface HealthData {
   status: string;
   version: string;
   mode: "live" | "demo";
-  agents: { id: string; codename: string; specialty: string; status: string }[];
+  stats: {
+    totalAnalyses: number;
+    liveAnalyses: number;
+    avgConfidence: number;
+    avgProcessingTimeMs: number;
+  };
+  agents: { id: string; codename: string; specialty: string; analysesPerformed: number }[];
 }
 
 export default function ApiStatusBanner() {
@@ -57,14 +63,13 @@ export default function ApiStatusBanner() {
             border: `1px solid ${isLive ? "rgba(110,231,183,0.3)" : "rgba(253,230,138,0.3)"}`,
           }}
         >
-          {isLive ? "LIVE" : "DEMO"} MODE
+          {isLive ? "LIVE" : "NO API KEY"}
         </span>
         <span className="text-xs text-white/30 font-mono">v{health.version}</span>
       </div>
-      <div className="flex items-center gap-2">
-        {health.agents.map((a) => (
-          <span key={a.id} className="text-[10px] font-mono text-white/30">{a.codename}</span>
-        ))}
+      <div className="flex items-center gap-4 text-[10px] font-mono text-white/30">
+        <span>{health.stats.totalAnalyses} analyses</span>
+        {health.stats.avgConfidence > 0 && <span>{health.stats.avgConfidence}% avg confidence</span>}
       </div>
     </div>
   );

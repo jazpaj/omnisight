@@ -14,8 +14,8 @@ interface AnalysisResponse {
   analysisType: string;
   analysis: VisionAnalysis;
   processingTimeMs: number;
-  receiptHash: string | null;
-  demo?: boolean;
+  inputHash: string;
+  outputHash: string;
 }
 
 export default function AnalyzePage() {
@@ -24,6 +24,7 @@ export default function AnalyzePage() {
   const [analysisType, setAnalysisType] = useState<AnalysisType>("chart");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
   const handleFile = useCallback((file: File) => {
@@ -48,6 +49,7 @@ export default function AnalyzePage() {
     if (!image) return;
     setLoading(true);
     setResult(null);
+    setError(null);
 
     try {
       const res = await fetch("/api/vision/analyze", {
@@ -56,9 +58,14 @@ export default function AnalyzePage() {
         body: JSON.stringify({ image, type: analysisType }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Analysis failed");
+        return;
+      }
       setResult(data);
     } catch (err) {
       console.error("Analysis failed:", err);
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -176,7 +183,13 @@ export default function AnalyzePage() {
                     <NeonBadge color="cyan" size="md">{result.agentCodename}</NeonBadge>
                     <span className="text-xs text-white/30 font-mono">{result.processingTimeMs.toFixed(0)}ms</span>
                   </div>
-                  {result.demo && <NeonBadge color="orange" size="sm">DEMO</NeonBadge>}
+                  <NeonBadge color="green" size="sm">LIVE</NeonBadge>
+                </div>
+
+                {/* Data integrity hashes */}
+                <div className="flex gap-4 text-[10px] font-mono text-white/20">
+                  <span>in: {result.inputHash?.slice(0, 12)}...</span>
+                  <span>out: {result.outputHash?.slice(0, 12)}...</span>
                 </div>
 
                 {/* Render analysis based on type */}
@@ -196,7 +209,21 @@ export default function AnalyzePage() {
               </motion.div>
             )}
 
-            {!loading && !result && (
+            {!loading && error && (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="card p-8 flex flex-col items-center justify-center text-center"
+                style={{ minHeight: "400px" }}
+              >
+                <div className="text-4xl mb-4">⚠️</div>
+                <p className="text-sm text-red-400/80 max-w-xs">{error}</p>
+              </motion.div>
+            )}
+
+            {!loading && !result && !error && (
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }}

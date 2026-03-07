@@ -11,6 +11,7 @@ export default function GeneratePage() {
   const [selectedStyle, setSelectedStyle] = useState("Cyberpunk");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) return;
@@ -26,6 +27,7 @@ export default function GeneratePage() {
     if (!image) return;
     setLoading(true);
     setResult(null);
+    setError(null);
 
     try {
       const res = await fetch("/api/generate/avatar", {
@@ -34,9 +36,14 @@ export default function GeneratePage() {
         body: JSON.stringify({ image, style: selectedStyle }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Generation failed");
+        return;
+      }
       setResult(data);
     } catch (err) {
       console.error("Generation failed:", err);
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -108,11 +115,16 @@ export default function GeneratePage() {
 
         {/* Results */}
         <AnimatePresence mode="wait">
-          {result ? (
+          {error ? (
+            <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card p-8 flex flex-col items-center justify-center text-center" style={{ minHeight: "400px" }}>
+              <div className="text-4xl mb-4">⚠️</div>
+              <p className="text-sm text-red-400/80 max-w-xs">{error}</p>
+            </motion.div>
+          ) : result ? (
             <motion.div key="result" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="card p-5 space-y-4">
               <div className="flex items-center gap-2">
                 <NeonBadge color="green" size="md">GENESIS</NeonBadge>
-                {(result as Record<string, unknown>).demo ? <NeonBadge color="orange" size="sm">DEMO</NeonBadge> : null}
+                <NeonBadge color="cyan" size="sm">LIVE</NeonBadge>
               </div>
 
               <div>
@@ -136,8 +148,10 @@ export default function GeneratePage() {
                 </div>
               </div>
 
-              <div className="pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                <p className="text-[10px] text-white/30">{String((result as Record<string, unknown>).note || "")}</p>
+              {/* Data integrity hashes */}
+              <div className="pt-2 flex gap-4 text-[10px] font-mono text-white/20" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <span>in: {String((result as Record<string, unknown>).inputHash || "").slice(0, 12)}...</span>
+                <span>out: {String((result as Record<string, unknown>).outputHash || "").slice(0, 12)}...</span>
               </div>
             </motion.div>
           ) : (

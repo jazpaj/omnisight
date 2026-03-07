@@ -33,12 +33,6 @@ export default function ApiDocEndpoint({ endpoint }: ApiDocEndpointProps) {
       } else if (endpoint.method === "GET") {
         const url = endpoint.id === "receipts-list" ? `${endpoint.path}?limit=3` : endpoint.path;
         res = await fetch(url);
-      } else if (endpoint.id === "receipts-create") {
-        res = await fetch(endpoint.path, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ agentId: "retina", analysisType: "chart" }),
-        });
       } else {
         setTryItResponse("// This endpoint requires a base64 image.\n// Use the Analyze page to test with real images.");
         setTryItLoading(false);

@@ -1,19 +1,8 @@
 import { NextRequest } from "next/server";
 import { analyzeImage } from "@/lib/api/claude-vision";
 import { detectMediaTypeFromBase64 } from "@/lib/api/image-utils";
-import { SAMPLE_CHART_ANALYSIS, SAMPLE_NFT_ANALYSIS, SAMPLE_PORTRAIT_ANALYSIS } from "@/lib/data/analyses";
-import type { GeneralAnalysis, ChartAnalysis, NFTAnalysis, PortraitAnalysis } from "@/lib/data/analyses";
-import { corsHeaders, apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
-
-const DEMO_GENERAL: GeneralAnalysis = {
-  type: "general",
-  description: "A high-resolution photograph showing a modern workspace with multiple monitors displaying data visualizations.",
-  objects: ["monitor", "keyboard", "desk", "chart", "code editor"],
-  text: ["Dashboard", "Analytics", "Q4 Report"],
-  sentiment: "Professional and productive",
-  tags: ["workspace", "technology", "data", "professional"],
-  confidence: 93,
-};
+import { recordAnalysis } from "@/lib/api/analysis-store";
+import { apiError, jsonResponse, optionsResponse, isApiKeyConfigured } from "@/lib/api/api-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,41 +13,54 @@ export async function POST(req: NextRequest) {
       return apiError("Image is required", "MISSING_IMAGE", 400);
     }
 
-    const startTime = Date.now();
-
-    const cleanBase64 = image.replace(/^data:image\/\w+;base64,/, "");
-    const mediaType = detectMediaTypeFromBase64(cleanBase64);
-    const result = await analyzeImage(cleanBase64, mediaType, type);
-
-    if (result) {
-      return jsonResponse({
-        analysisId: `analysis-${Date.now()}`,
-        agentId: agentId || getDefaultAgent(type),
-        agentCodename: getAgentCodename(agentId || getDefaultAgent(type)),
-        analysisType: type,
-        analysis: result,
-        processingTimeMs: Date.now() - startTime,
-        receiptHash: null,
-      });
+    if (!isApiKeyConfigured()) {
+      return apiError(
+        "API key not configured. Set ANTHROPIC_API_KEY in your environment variables to enable vision analysis.",
+        "API_KEY_MISSING",
+        503
+      );
     }
 
-    const demoMap: Record<string, ChartAnalysis | NFTAnalysis | PortraitAnalysis | GeneralAnalysis> = {
-      chart: SAMPLE_CHART_ANALYSIS,
-      nft: SAMPLE_NFT_ANALYSIS,
-      portrait: SAMPLE_PORTRAIT_ANALYSIS,
-      general: DEMO_GENERAL,
-    };
-    const demoAnalysis = demoMap[type as string] ?? DEMO_GENERAL;
+    const startTime = Date.now();
+    const cleanBase64 = image.replace(/^data:image\/\w+;base64,/, "");
+    const mediaType = detectMediaTypeFromBase64(cleanBase64);
+
+    const result = await analyzeImage(cleanBase64, mediaType, type);
+    const processingTimeMs = Date.now() - startTime;
+
+    if (!result) {
+      return apiError(
+        "Vision analysis failed. The AI model could not process this image. Try a different image or check your API key.",
+        "ANALYSIS_FAILED",
+        422
+      );
+    }
+
+    const resolvedAgentId = agentId || getDefaultAgent(type);
+    const resolvedCodename = getAgentCodename(resolvedAgentId);
+
+    // Record real analysis with actual SHA-256 hashes
+    const record = await recordAnalysis({
+      agentId: resolvedAgentId,
+      agentCodename: resolvedCodename,
+      analysisType: type,
+      inputData: cleanBase64.slice(0, 1000), // Hash first 1KB of image data
+      outputData: JSON.stringify(result),
+      summary: generateSummary(type, result),
+      confidence: result.confidence || 0,
+      processingTimeMs,
+      mode: "live",
+    });
 
     return jsonResponse({
-      analysisId: `demo-${Date.now()}`,
-      agentId: getDefaultAgent(type),
-      agentCodename: getAgentCodename(getDefaultAgent(type)),
+      analysisId: record.id,
+      agentId: resolvedAgentId,
+      agentCodename: resolvedCodename,
       analysisType: type,
-      analysis: demoAnalysis,
-      processingTimeMs: 800 + Math.random() * 1500,
-      receiptHash: null,
-      demo: true,
+      analysis: result,
+      processingTimeMs,
+      inputHash: record.inputHash,
+      outputHash: record.outputHash,
     });
   } catch (error) {
     console.error("Vision analysis error:", error);
@@ -78,4 +80,18 @@ function getDefaultAgent(type: string): string {
 function getAgentCodename(id: string): string {
   const map: Record<string, string> = { retina: "RETINA", spectrum: "SPECTRUM", genesis: "GENESIS", cortex: "CORTEX", nexus: "NEXUS" };
   return map[id] || "CORTEX";
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function generateSummary(type: string, result: any): string {
+  switch (type) {
+    case "chart":
+      return `${result.pattern || "Pattern"} detected on ${result.ticker || "chart"} — ${result.trend || "neutral"} trend, ${result.confidence || 0}% confidence`;
+    case "nft":
+      return `${result.collection || "NFT"} analyzed — rarity ${result.rarityScore || 0}/100, ${result.confidence || 0}% confidence`;
+    case "portrait":
+      return `Portrait analyzed — ${result.style || "style detected"}, ${result.confidence || 0}% confidence`;
+    default:
+      return `${(result.objects || []).length} objects detected — ${result.sentiment || "analyzed"}, ${result.confidence || 0}% confidence`;
+  }
 }

@@ -34,18 +34,19 @@ export default function APIPlaygroundPage() {
         <h2 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-3">Authentication</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-1">Demo Mode</h3>
+            <h3 className="text-sm font-semibold text-white/80 mb-1">Required: Anthropic API Key</h3>
             <p className="text-xs text-white/40 leading-relaxed">
-              All endpoints work without an API key, returning realistic sample data.
-              Responses include a <code className="text-white/50 bg-white/[0.05] px-1 rounded">demo: true</code> flag.
+              Vision, chat, and generation endpoints require a real Anthropic API key.
+              All analysis is performed by Claude AI — no fake or sample data is returned.
+              Without a key, these endpoints return <code className="text-white/50 bg-white/[0.05] px-1 rounded">503</code>.
             </p>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white/80 mb-1">Live Mode</h3>
+            <h3 className="text-sm font-semibold text-white/80 mb-1">Setup</h3>
             <p className="text-xs text-white/40 leading-relaxed mb-2">
-              Set your Anthropic API key for real Claude-powered vision analysis:
+              Set your Anthropic API key in your environment:
             </p>
-            <CodeBlock code={`# .env.local\nANTHROPIC_API_KEY=sk-ant-...`} language="bash" />
+            <CodeBlock code={`# .env.local (local dev)\nANTHROPIC_API_KEY=sk-ant-...\n\n# Vercel (production)\n# Settings → Environment Variables`} language="bash" />
           </div>
         </div>
       </motion.div>

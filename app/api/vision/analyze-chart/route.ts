@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { analyzeImage } from "@/lib/api/claude-vision";
 import { detectMediaTypeFromBase64 } from "@/lib/api/image-utils";
-import { SAMPLE_CHART_ANALYSIS } from "@/lib/data/analyses";
-import { apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
+import { recordAnalysis } from "@/lib/api/analysis-store";
+import { apiError, jsonResponse, optionsResponse, isApiKeyConfigured } from "@/lib/api/api-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,32 +13,50 @@ export async function POST(req: NextRequest) {
       return apiError("Image is required", "MISSING_IMAGE", 400);
     }
 
+    if (!isApiKeyConfigured()) {
+      return apiError(
+        "API key not configured. Set ANTHROPIC_API_KEY in your environment variables to enable chart analysis.",
+        "API_KEY_MISSING",
+        503
+      );
+    }
+
     const startTime = Date.now();
     const cleanBase64 = image.replace(/^data:image\/\w+;base64,/, "");
     const mediaType = detectMediaTypeFromBase64(cleanBase64);
-    const result = await analyzeImage(cleanBase64, mediaType, "chart");
 
-    if (result) {
-      return jsonResponse({
-        analysisId: `chart-${Date.now()}`,
-        agentId: "retina",
-        agentCodename: "RETINA",
-        analysisType: "chart",
-        analysis: result,
-        processingTimeMs: Date.now() - startTime,
-        receiptHash: null,
-      });
+    const result = await analyzeImage(cleanBase64, mediaType, "chart");
+    const processingTimeMs = Date.now() - startTime;
+
+    if (!result) {
+      return apiError(
+        "Chart analysis failed. The AI model could not process this chart image.",
+        "ANALYSIS_FAILED",
+        422
+      );
     }
 
-    return jsonResponse({
-      analysisId: `demo-chart-${Date.now()}`,
+    const record = await recordAnalysis({
       agentId: "retina",
       agentCodename: "RETINA",
       analysisType: "chart",
-      analysis: SAMPLE_CHART_ANALYSIS,
-      processingTimeMs: 1240,
-      receiptHash: null,
-      demo: true,
+      inputData: cleanBase64.slice(0, 1000),
+      outputData: JSON.stringify(result),
+      summary: `${result.pattern || "Pattern"} detected on ${result.ticker || "chart"} — ${result.trend || "neutral"} trend`,
+      confidence: result.confidence || 0,
+      processingTimeMs,
+      mode: "live",
+    });
+
+    return jsonResponse({
+      analysisId: record.id,
+      agentId: "retina",
+      agentCodename: "RETINA",
+      analysisType: "chart",
+      analysis: result,
+      processingTimeMs,
+      inputHash: record.inputHash,
+      outputHash: record.outputHash,
     });
   } catch (error) {
     console.error("Chart analysis error:", error);
