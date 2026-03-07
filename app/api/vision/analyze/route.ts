@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { analyzeImage } from "@/lib/api/claude-vision";
 import { detectMediaTypeFromBase64 } from "@/lib/api/image-utils";
 import { SAMPLE_CHART_ANALYSIS, SAMPLE_NFT_ANALYSIS, SAMPLE_PORTRAIT_ANALYSIS } from "@/lib/data/analyses";
 import type { GeneralAnalysis, ChartAnalysis, NFTAnalysis, PortraitAnalysis } from "@/lib/data/analyses";
+import { corsHeaders, apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
 
 const DEMO_GENERAL: GeneralAnalysis = {
   type: "general",
@@ -20,18 +21,17 @@ export async function POST(req: NextRequest) {
     const { image, type = "general", agentId } = body;
 
     if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+      return apiError("Image is required", "MISSING_IMAGE", 400);
     }
 
     const startTime = Date.now();
 
-    // Try real analysis
     const cleanBase64 = image.replace(/^data:image\/\w+;base64,/, "");
     const mediaType = detectMediaTypeFromBase64(cleanBase64);
     const result = await analyzeImage(cleanBase64, mediaType, type);
 
     if (result) {
-      return NextResponse.json({
+      return jsonResponse({
         analysisId: `analysis-${Date.now()}`,
         agentId: agentId || getDefaultAgent(type),
         agentCodename: getAgentCodename(agentId || getDefaultAgent(type)),
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Demo mode fallback
     const demoMap: Record<string, ChartAnalysis | NFTAnalysis | PortraitAnalysis | GeneralAnalysis> = {
       chart: SAMPLE_CHART_ANALYSIS,
       nft: SAMPLE_NFT_ANALYSIS,
@@ -51,7 +50,7 @@ export async function POST(req: NextRequest) {
     };
     const demoAnalysis = demoMap[type as string] ?? DEMO_GENERAL;
 
-    return NextResponse.json({
+    return jsonResponse({
       analysisId: `demo-${Date.now()}`,
       agentId: getDefaultAgent(type),
       agentCodename: getAgentCodename(getDefaultAgent(type)),
@@ -63,8 +62,12 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Vision analysis error:", error);
-    return NextResponse.json({ error: "Analysis failed" }, { status: 500 });
+    return apiError("Analysis failed", "ANALYSIS_ERROR", 500);
   }
+}
+
+export async function OPTIONS() {
+  return optionsResponse();
 }
 
 function getDefaultAgent(type: string): string {

@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
 
 const SYSTEM_PROMPT = `You are OMNISIGHT AI, the intelligence assistant for the OMNISIGHT Vision Agent Protocol.
 
@@ -32,14 +33,15 @@ export async function POST(req: NextRequest) {
     const { messages } = body;
 
     if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json({ error: "Messages array is required" }, { status: 400 });
+      return apiError("Messages array is required", "MISSING_MESSAGES", 400);
     }
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey || apiKey === "your_api_key_here") {
-      return NextResponse.json({
+      return jsonResponse({
         role: "assistant",
         content: "OMNISIGHT AI is running in demo mode. Add your ANTHROPIC_API_KEY to .env.local to enable full AI chat capabilities. In the meantime, feel free to explore the vision analysis tools and agent dashboard!",
+        demo: true,
       });
     }
 
@@ -59,12 +61,16 @@ export async function POST(req: NextRequest) {
 
     const textBlock = response.content.find((b) => b.type === "text");
 
-    return NextResponse.json({
+    return jsonResponse({
       role: "assistant",
       content: textBlock && textBlock.type === "text" ? textBlock.text : "I couldn't generate a response. Please try again.",
     });
   } catch (error) {
     console.error("Chat error:", error);
-    return NextResponse.json({ error: "Chat failed" }, { status: 500 });
+    return apiError("Chat failed", "CHAT_ERROR", 500);
   }
+}
+
+export async function OPTIONS() {
+  return optionsResponse();
 }

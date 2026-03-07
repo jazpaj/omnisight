@@ -2,125 +2,115 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import ApiStatusBanner from "@/components/app/ApiStatusBanner";
+import ApiDocEndpoint from "@/components/app/ApiDocEndpoint";
 import CodeBlock from "@/components/ui/CodeBlock";
-
-const endpoints = [
-  {
-    method: "POST",
-    path: "/api/vision/analyze",
-    description: "Analyze any image with automatic agent routing",
-    request: `{
-  "image": "base64_encoded_image_data",
-  "type": "chart | nft | portrait | general",
-  "agentId": "retina | spectrum | genesis | cortex | nexus"
-}`,
-    response: `{
-  "analysisId": "analysis-1709567890",
-  "agentId": "retina",
-  "agentCodename": "RETINA",
-  "analysisType": "chart",
-  "analysis": {
-    "type": "chart",
-    "ticker": "SOL/USDT",
-    "pattern": "Ascending Triangle",
-    "trend": "bullish",
-    "confidence": 87
-  },
-  "processingTimeMs": 1240,
-  "receiptHash": null
-}`,
-  },
-  {
-    method: "POST",
-    path: "/api/chat",
-    description: "Chat with OMNISIGHT AI assistant",
-    request: `{
-  "messages": [
-    { "role": "user", "content": "What patterns do you see in SOL?" }
-  ]
-}`,
-    response: `{
-  "role": "assistant",
-  "content": "Based on RETINA's recent analysis..."
-}`,
-  },
-  {
-    method: "POST",
-    path: "/api/generate/avatar",
-    description: "Generate avatar prompt from reference image",
-    request: `{
-  "image": "base64_encoded_image_data",
-  "style": "Cyberpunk"
-}`,
-    response: `{
-  "generationId": "gen-1709567890",
-  "agentCodename": "GENESIS",
-  "prompt": "Professional portrait..., cyberpunk style",
-  "suggestedStyles": ["Cyberpunk", "Anime", "3D Render"]
-}`,
-  },
-];
+import { API_ENDPOINTS, CATEGORIES } from "@/lib/data/api-docs";
 
 export default function APIPlaygroundPage() {
-  const [activeEndpoint, setActiveEndpoint] = useState(0);
-  const ep = endpoints[activeEndpoint];
+  const [activeEndpointId, setActiveEndpointId] = useState(API_ENDPOINTS[0].id);
+  const activeEndpoint = API_ENDPOINTS.find((e) => e.id === activeEndpointId) || API_ENDPOINTS[0];
 
   return (
     <div className="p-6 space-y-6">
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white mb-1">API Documentation</h1>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Vision-as-a-Service REST API</p>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+          Vision-as-a-Service REST API — {API_ENDPOINTS.length} endpoints
+        </p>
       </div>
 
-      {/* Endpoint tabs */}
-      <div className="flex gap-2 flex-wrap">
-        {endpoints.map((e, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveEndpoint(i)}
-            className="px-4 py-2 rounded-lg text-xs font-mono transition-all cursor-pointer"
-            style={{
-              background: i === activeEndpoint ? "var(--surface-2)" : "var(--surface-1)",
-              border: `1px solid ${i === activeEndpoint ? "var(--border-hover)" : "var(--border)"}`,
-              color: i === activeEndpoint ? "var(--text-primary)" : "var(--text-secondary)",
-            }}
-          >
-            <span className="mr-1" style={{ color: "var(--green)" }}>{e.method}</span> {e.path}
-          </button>
-        ))}
-      </div>
+      {/* Status Banner */}
+      <ApiStatusBanner />
 
-      {/* Active endpoint detail */}
-      <motion.div key={activeEndpoint} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-        <div className="card p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono font-bold" style={{ color: "var(--green)" }}>{ep.method}</span>
-            <span className="text-sm font-mono text-white/70">{ep.path}</span>
-          </div>
-          <p className="text-sm text-white/50">{ep.description}</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Auth Info */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="card p-5"
+      >
+        <h2 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-3">Authentication</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-xs text-white/40 mb-2">Request Body</p>
-            <CodeBlock code={ep.request} language="json" />
+            <h3 className="text-sm font-semibold text-white/80 mb-1">Demo Mode</h3>
+            <p className="text-xs text-white/40 leading-relaxed">
+              All endpoints work without an API key, returning realistic sample data.
+              Responses include a <code className="text-white/50 bg-white/[0.05] px-1 rounded">demo: true</code> flag.
+            </p>
           </div>
           <div>
-            <p className="text-xs text-white/40 mb-2">Response</p>
-            <CodeBlock code={ep.response} language="json" />
+            <h3 className="text-sm font-semibold text-white/80 mb-1">Live Mode</h3>
+            <p className="text-xs text-white/40 leading-relaxed mb-2">
+              Set your Anthropic API key for real Claude-powered vision analysis:
+            </p>
+            <CodeBlock code={`# .env.local\nANTHROPIC_API_KEY=sk-ant-...`} language="bash" />
           </div>
         </div>
       </motion.div>
 
-      {/* cURL example */}
-      <div>
-        <p className="text-xs text-white/40 mb-2">cURL Example</p>
-        <CodeBlock
-          code={`curl -X POST ${typeof window !== 'undefined' ? window.location.origin : 'https://omnisight.app'}${ep.path} \\
-  -H "Content-Type: application/json" \\
-  -d '${ep.request.replace(/\n/g, "").replace(/\s+/g, " ")}'`}
-          language="bash"
-        />
+      {/* Endpoint Sidebar + Detail */}
+      <div className="flex gap-4 flex-col lg:flex-row">
+        {/* Sidebar */}
+        <motion.div
+          initial={{ opacity: 0, x: -8 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15 }}
+          className="lg:w-56 shrink-0"
+        >
+          <div className="card p-3 space-y-3 lg:sticky lg:top-6">
+            {CATEGORIES.map((cat) => {
+              const endpoints = API_ENDPOINTS.filter((e) => e.category === cat.id);
+              if (endpoints.length === 0) return null;
+              return (
+                <div key={cat.id}>
+                  <p className="text-[10px] font-bold text-white/30 uppercase tracking-wider px-2 mb-1">
+                    {cat.label}
+                  </p>
+                  {endpoints.map((ep) => {
+                    const isActive = ep.id === activeEndpointId;
+                    const methodColor = ep.method === "GET" ? "var(--green)" : "var(--cyan)";
+                    return (
+                      <button
+                        key={ep.id}
+                        onClick={() => setActiveEndpointId(ep.id)}
+                        className="w-full text-left px-2 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5"
+                        style={{
+                          background: isActive ? "var(--surface-2)" : "transparent",
+                          color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                          borderLeft: isActive ? `2px solid ${methodColor}` : "2px solid transparent",
+                        }}
+                      >
+                        <span
+                          className="text-[9px] font-bold shrink-0 w-7"
+                          style={{ color: methodColor }}
+                        >
+                          {ep.method}
+                        </span>
+                        <span className="truncate">{ep.path.replace("/api/", "")}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Detail Panel */}
+        <div className="flex-1 min-w-0">
+          <ApiDocEndpoint key={activeEndpoint.id} endpoint={activeEndpoint} />
+        </div>
+      </div>
+
+      {/* Base URL info */}
+      <div className="card p-4">
+        <p className="text-xs text-white/30 font-mono">
+          Base URL: <span className="text-white/50">https://your-deployment.vercel.app</span>
+          {" · "}Content-Type: <span className="text-white/50">application/json</span>
+          {" · "}CORS: <span className="text-white/50">enabled</span>
+        </p>
       </div>
     </div>
   );

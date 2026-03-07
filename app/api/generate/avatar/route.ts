@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { analyzeImage } from "@/lib/api/claude-vision";
 import { detectMediaTypeFromBase64 } from "@/lib/api/image-utils";
 import { SAMPLE_PORTRAIT_ANALYSIS } from "@/lib/data/analyses";
+import { apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
     const { image, style = "Cyberpunk" } = body;
 
     if (!image) {
-      return NextResponse.json({ error: "Reference image is required" }, { status: 400 });
+      return apiError("Reference image is required", "MISSING_IMAGE", 400);
     }
 
     const startTime = Date.now();
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
     const result = await analyzeImage(cleanBase64, mediaType, "portrait");
 
     if (result && result.generationPrompt) {
-      return NextResponse.json({
+      return jsonResponse({
         generationId: `gen-${Date.now()}`,
         agentId: "genesis",
         agentCodename: "GENESIS",
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({
+    return jsonResponse({
       generationId: `demo-gen-${Date.now()}`,
       agentId: "genesis",
       agentCodename: "GENESIS",
@@ -47,6 +48,10 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Avatar generation error:", error);
-    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+    return apiError("Generation failed", "GENERATION_ERROR", 500);
   }
+}
+
+export async function OPTIONS() {
+  return optionsResponse();
 }

@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { analyzeImage } from "@/lib/api/claude-vision";
 import { detectMediaTypeFromBase64 } from "@/lib/api/image-utils";
 import { SAMPLE_NFT_ANALYSIS } from "@/lib/data/analyses";
+import { apiError, jsonResponse, optionsResponse } from "@/lib/api/api-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
     const { image } = body;
 
     if (!image) {
-      return NextResponse.json({ error: "Image is required" }, { status: 400 });
+      return apiError("Image is required", "MISSING_IMAGE", 400);
     }
 
     const startTime = Date.now();
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
     const result = await analyzeImage(cleanBase64, mediaType, "nft");
 
     if (result) {
-      return NextResponse.json({
+      return jsonResponse({
         analysisId: `nft-${Date.now()}`,
         agentId: "spectrum",
         agentCodename: "SPECTRUM",
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({
+    return jsonResponse({
       analysisId: `demo-nft-${Date.now()}`,
       agentId: "spectrum",
       agentCodename: "SPECTRUM",
@@ -41,6 +42,10 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("NFT analysis error:", error);
-    return NextResponse.json({ error: "NFT analysis failed" }, { status: 500 });
+    return apiError("NFT analysis failed", "NFT_ANALYSIS_ERROR", 500);
   }
+}
+
+export async function OPTIONS() {
+  return optionsResponse();
 }

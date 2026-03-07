@@ -1,7 +1,8 @@
 "use client";
 
 import ScrollReveal from "@/components/ui/ScrollReveal";
-import { useRef } from "react";
+import Link from "next/link";
+import NeonBadge from "@/components/ui/NeonBadge";
 
 const requestJson = {
   image: '"base64_encoded_image..."',
@@ -238,6 +239,37 @@ export default function APIPreview() {
 
         {/* Feature strip */}
         <FeatureStrip />
+
+        {/* Agent routing + Docs link */}
+        <ScrollReveal delay={0.2}>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-white/30 mr-1">Powered by</span>
+              {(
+                [
+                  { name: "RETINA", color: "cyan" as const },
+                  { name: "SPECTRUM", color: "purple" as const },
+                  { name: "GENESIS", color: "green" as const },
+                  { name: "CORTEX", color: "yellow" as const },
+                  { name: "NEXUS", color: "orange" as const },
+                ] as const
+              ).map((a) => (
+                <NeonBadge key={a.name} color={a.color} size="sm">
+                  {a.name}
+                </NeonBadge>
+              ))}
+            </div>
+            <Link
+              href="/app/api-playground"
+              className="btn-primary inline-flex items-center justify-center px-6 py-2.5 text-sm font-medium"
+            >
+              View Full API Docs
+              <svg className="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

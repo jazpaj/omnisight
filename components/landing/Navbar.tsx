@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Home", href: "#home" },
   { label: "App", href: "/app" },
   { label: "Agents", href: "#agents" },
+  { label: "API", href: "#api" },
   { label: "Token", href: "#token" },
 ];
 
